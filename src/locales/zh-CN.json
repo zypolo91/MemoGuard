@@ -1,0 +1,24 @@
+﻿{
+  "app": {
+    "title": "MemoGuard",
+    "tagline": "守护记忆，关怀日常"
+  },
+  "nav": {
+    "memories": "记忆守护",
+    "tasks": "关怀任务",
+    "nutrition": "正念饮食",
+    "insights": "资讯洞察",
+    "profile": "我的"
+  },
+  "cta": {
+    "addMemory": "新增回忆",
+    "addTask": "创建任务",
+    "addRecipe": "记录菜谱"
+  },
+  "empty": {
+    "memories": "还没有记录回忆，点此开始第一条记录吧。",
+    "tasks": "暂无关怀任务，创建一个定时提醒试试。",
+    "recipes": "添加喜爱的养脑餐单，让饮食更安心。",
+    "news": "关注收藏的文章会显示在这里。"
+  }
+}

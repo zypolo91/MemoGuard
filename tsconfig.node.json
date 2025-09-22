@@ -1,0 +1,8 @@
+﻿{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["vite.config.ts", "vitest.config.ts", "tailwind.config.ts", "postcss.config.cjs"]
+}
