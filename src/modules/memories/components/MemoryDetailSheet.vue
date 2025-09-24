@@ -1,8 +1,15 @@
 ﻿<template>
   <Transition name="sheet">
-    <div v-if="open" class="fixed inset-0 z-[80] flex items-end bg-black/40">
-      <div class="relative w-full rounded-t-3xl bg-surface pb-safe shadow-2xl">
-        <header class="sticky top-0 flex items-center justify-between border-b border-outline/40 bg-surface px-6 py-5">
+    <div
+      v-if="open"
+      class="fixed inset-0 z-[80] flex items-center justify-center bg-black/40 px-4 py-8"
+    >
+      <div
+        class="relative flex max-h-[72vh] w-full max-w-[720px] flex-col overflow-hidden rounded-3xl bg-surface shadow-2xl"
+      >
+        <header
+          class="sticky top-0 flex items-center justify-between border-b border-outline/40 bg-surface px-6 py-5 shadow-sm"
+        >
           <div>
             <p class="text-xs uppercase tracking-[0.3em] text-primary/70">记忆详情</p>
             <h2 class="text-lg font-semibold text-content">{{ memory?.title }}</h2>
@@ -17,7 +24,7 @@
           </div>
         </header>
 
-        <div class="max-h-[75vh] overflow-y-auto px-6 pb-12 pt-4" v-if="memory">
+        <div v-if="memory" class="flex-1 overflow-y-auto px-6 pb-12 pt-4">
           <div class="space-y-6">
             <div v-if="coverUrl" class="overflow-hidden rounded-3xl">
               <img :src="coverUrl" alt="封面" class="h-48 w-full object-cover" />
@@ -30,7 +37,7 @@
               </div>
               <div class="rounded-2xl bg-surface-muted/70 px-4 py-3">
                 <p class="text-[11px] uppercase tracking-[0.3em] text-primary/70">心情</p>
-                <p class="mt-1 text-sm text-content">{{ memory.mood ?? '未标注' }}</p>
+                <p class="mt-1 text-sm text-content">{{ memory.mood ?? "未标注" }}</p>
               </div>
             </div>
 
@@ -40,7 +47,9 @@
 
             <UiCard padding="p-5" class="space-y-4">
               <h3 class="text-base font-semibold text-content">详细内容</h3>
-              <p class="whitespace-pre-line text-sm leading-relaxed text-content/80">{{ memory.content }}</p>
+              <p class="whitespace-pre-line text-sm leading-relaxed text-content/80">
+                {{ memory.content }}
+              </p>
             </UiCard>
 
             <div v-if="memory.media.length" class="space-y-3">
@@ -52,18 +61,41 @@
                 class="flex items-center justify-between gap-3"
               >
                 <div class="flex items-center gap-3">
-                  <div v-if="item.type === 'image'" class="h-16 w-16 overflow-hidden rounded-2xl bg-surface-muted">
-                    <img :src="item.thumbnail ?? item.url" alt="" class="h-full w-full object-cover" />
+                  <div
+                    v-if="item.type === 'image'"
+                    class="h-16 w-16 overflow-hidden rounded-2xl bg-surface-muted"
+                  >
+                    <img
+                      :src="item.thumbnail ?? item.url"
+                      alt=""
+                      class="h-full w-full object-cover"
+                    />
                   </div>
-                  <div v-else class="grid h-16 w-16 place-items-center rounded-2xl bg-primary/10 text-primary">
+                  <div
+                    v-else
+                    class="grid h-16 w-16 place-items-center rounded-2xl bg-primary/10 text-primary"
+                  >
                     <component :is="mediaIcon(item.type)" class="h-6 w-6" />
                   </div>
                   <div class="space-y-1 text-xs text-content/70">
                     <p class="font-medium text-content">{{ item.name ?? formatMediaName(item) }}</p>
-                    <a v-if="isLink(item)" :href="item.url" target="_blank" rel="noopener" class="text-primary underline underline-offset-2">打开链接</a>
+                    <a
+                      v-if="isLink(item)"
+                      :href="item.url"
+                      target="_blank"
+                      rel="noopener"
+                      class="text-primary underline underline-offset-2"
+                      >打开链接</a
+                    >
                   </div>
                 </div>
-                <a :href="item.url" target="_blank" rel="noopener" class="rounded-full border border-outline/40 px-3 py-1 text-xs text-content/60">查看</a>
+                <a
+                  :href="item.url"
+                  target="_blank"
+                  rel="noopener"
+                  class="rounded-full border border-outline/40 px-3 py-1 text-xs text-content/60"
+                  >查看</a
+                >
               </UiCard>
             </div>
           </div>
@@ -132,7 +164,9 @@ function isLink(item: MemoryMedia) {
 <style scoped>
 .sheet-enter-active,
 .sheet-leave-active {
-  transition: transform 0.24s ease, opacity 0.24s ease;
+  transition:
+    transform 0.24s ease,
+    opacity 0.24s ease;
 }
 .sheet-enter-from,
 .sheet-leave-to {
@@ -140,4 +174,3 @@ function isLink(item: MemoryMedia) {
   opacity: 0;
 }
 </style>
-

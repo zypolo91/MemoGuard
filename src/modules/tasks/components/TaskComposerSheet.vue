@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Transition name="sheet">
     <div v-if="open" class="fixed inset-0 z-[80] flex items-end bg-black/50">
       <div class="relative w-full max-h-[85vh] rounded-t-3xl bg-surface shadow-2xl">
@@ -25,13 +25,16 @@
               />
             </div>
 
-            <div class="grid grid-cols-2 gap-3 text-sm text-content/70">
+            <div class="grid gap-3 text-sm text-content/70 sm:grid-cols-2">
               <label class="space-y-2">
-                <span class="text-sm font-medium text-content">开始时间</span>
+                <span class="text-sm font-medium text-content">开始日期</span>
+                <UiDatePicker v-model="form.startDate" />
+              </label>
+              <label class="space-y-2">
+                <span class="text-sm font-medium text-content">提醒时间</span>
                 <input
-                  v-model="form.startAt"
-                  type="datetime-local"
-                  required
+                  v-model="form.startTime"
+                  type="time"
                   class="w-full rounded-2xl border border-outline/40 bg-surface-muted/70 px-4 py-3 text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
               </label>
@@ -81,10 +84,12 @@ import { reactive, watch } from "vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 
 import UiIconButton from "@/components/atoms/UiIconButton.vue";
+import UiDatePicker from "@/components/molecules/UiDatePicker.vue";
 
 interface TaskDraft {
   title: string;
-  startAt: string;
+  startDate: string;
+  startTime: string;
   frequency: string;
   notes: string;
 }
@@ -93,12 +98,13 @@ const props = defineProps<{ open: boolean }>();
 
 const emit = defineEmits<{
   (e: "close"): void;
-  (e: "submit", payload: TaskDraft): void;
+  (e: "submit", payload: { title: string; startAt: string; frequency: string; notes: string }): void;
 }>();
 
 const form = reactive<TaskDraft>({
   title: "",
-  startAt: new Date().toISOString().slice(0, 16),
+  startDate: getToday(),
+  startTime: getNowTime(),
   frequency: "daily",
   notes: ""
 });
@@ -112,16 +118,40 @@ watch(
   }
 );
 
+function getToday() {
+  const date = new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function getNowTime() {
+  const date = new Date();
+  return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+}
+
 function resetForm() {
   form.title = "";
-  form.startAt = new Date().toISOString().slice(0, 16);
+  form.startDate = getToday();
+  form.startTime = getNowTime();
   form.frequency = "daily";
   form.notes = "";
 }
 
 function handleSubmit() {
-  emit("submit", { ...form });
+  const startAt = combineDateTime(form.startDate, form.startTime);
+  emit("submit", {
+    title: form.title.trim(),
+    startAt,
+    frequency: form.frequency,
+    notes: form.notes.trim()
+  });
   emit("close");
+}
+
+function combineDateTime(date: string, time: string) {
+  const [year, month, day] = date.split("-").map((part) => Number(part));
+  const [hour, minute] = time.split(":").map((part) => Number(part));
+  const composed = new Date(year, (month ?? 1) - 1, day ?? 1, hour ?? 0, minute ?? 0, 0, 0);
+  return composed.toISOString();
 }
 </script>
 

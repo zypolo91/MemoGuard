@@ -1,12 +1,14 @@
-﻿import { createApp } from "vue";
+import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
+import VCalendar from "v-calendar";
 
 import App from "./App.vue";
 import router from "./router";
 import zhCN from "./locales/zh-CN.json";
 
 import "./assets/styles/tailwind.css";
+import "v-calendar/style.css";
 
 const pinia = createPinia();
 
@@ -19,4 +21,9 @@ const i18n = createI18n({
   }
 });
 
-createApp(App).use(pinia).use(router).use(i18n).mount("#app");
+createApp(App)
+  .use(pinia)
+  .use(router)
+  .use(i18n)
+  .use(VCalendar)
+  .mount("#app");

@@ -25,11 +25,7 @@
     <div class="grid grid-cols-2 gap-3 text-sm text-content/70">
       <label class="space-y-2">
         日期
-        <input
-          v-model="form.eventDate"
-          type="date"
-          class="w-full rounded-2xl border border-outline/50 bg-surface px-4 py-3 text-content focus:border-primary focus:outline-none"
-        />
+        <UiDatePicker v-model="form.eventDate" />
       </label>
       <label class="space-y-2">
         情绪
@@ -61,6 +57,7 @@ import { MapPinIcon, MicrophoneIcon, PhotoIcon } from "@heroicons/vue/24/outline
 
 import UiCard from "@/components/atoms/UiCard.vue";
 import UiIconButton from "@/components/atoms/UiIconButton.vue";
+import UiDatePicker from "@/components/molecules/UiDatePicker.vue";
 
 const emit = defineEmits<{ (e: "create", payload: Record<string, unknown>): void }>();
 
@@ -75,3 +72,4 @@ function handleSubmit() {
   emit("create", { ...form });
 }
 </script>
+

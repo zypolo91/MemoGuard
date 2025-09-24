@@ -28,12 +28,7 @@
             <div class="grid grid-cols-2 gap-3 text-sm text-content/70">
               <label class="space-y-2">
                 <span class="text-sm font-medium text-content">发生日期</span>
-                <input
-                  v-model="form.eventDate"
-                  type="date"
-                  required
-                  class="w-full rounded-2xl border border-outline/40 bg-surface-muted/70 px-4 py-3 text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
-                />
+                <UiDatePicker v-model="form.eventDate" />
               </label>
               <label class="space-y-2">
                 <span class="text-sm font-medium text-content">心情</span>
@@ -169,6 +164,7 @@ import { ChevronDownIcon, LinkIcon, PhotoIcon, XMarkIcon } from "@heroicons/vue/
 import UiIconButton from "@/components/atoms/UiIconButton.vue";
 import UiTag from "@/components/atoms/UiTag.vue";
 import UiCard from "@/components/atoms/UiCard.vue";
+import UiDatePicker from "@/components/molecules/UiDatePicker.vue";
 import type { MemoryDraft, MemoryItem, MemoryMedia, MemoryMediaType } from "@/stores/memories";
 
 const props = defineProps<{
@@ -383,6 +379,7 @@ function createId() {
   opacity: 0;
 }
 </style>
+
 
 
 

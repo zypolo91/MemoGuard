@@ -6,24 +6,6 @@
       description="用清晰的任务面板掌控照护节奏。"
     />
 
-    <div class="grid gap-4 sm:grid-cols-3">
-      <UiCard padding="p-6" class="space-y-2">
-        <span class="text-xs text-content/60">今日待办</span>
-        <p class="text-2xl font-semibold text-content">{{ todayCount }}</p>
-        <span class="text-xs text-content/60">药物提醒与陪伴安排</span>
-      </UiCard>
-      <UiCard padding="p-6" class="space-y-2">
-        <span class="text-xs text-content/60">5 日内提醒</span>
-        <p class="text-2xl font-semibold text-content">{{ upcoming.length }}</p>
-        <span class="text-xs text-content/60">最近一次于 {{ nextReminder }}</span>
-      </UiCard>
-      <UiCard padding="p-6" class="space-y-2">
-        <span class="text-xs text-content/60">完成率</span>
-        <p class="text-2xl font-semibold text-success">{{ completionRate }}%</p>
-        <span class="text-xs text-content/60">以最近 7 天任务统计</span>
-      </UiCard>
-    </div>
-
     <div class="flex items-center justify-between">
       <h2 class="text-sm font-semibold text-content/70">任务视图</h2>
       <SegmentedControl v-model="activeView" :options="viewOptions" />
@@ -39,7 +21,9 @@
           <ul class="space-y-3 text-sm text-content/70">
             <li v-for="item in upcoming" :key="item.id" class="flex items-center justify-between">
               <span>{{ item.title }}</span>
-              <span class="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary">{{ formatTime(item.startAt) }}</span>
+              <span class="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary">{{
+                formatTime(item.startAt)
+              }}</span>
             </li>
           </ul>
           <p v-if="!upcoming.length" class="text-sm text-content/60">暂无近期开启的提醒。</p>
@@ -49,7 +33,11 @@
       </div>
     </div>
 
-    <TaskComposerSheet :open="isComposerOpen" @close="toggleComposer(false)" @submit="handleCreate" />
+    <TaskComposerSheet
+      :open="isComposerOpen"
+      @close="toggleComposer(false)"
+      @submit="handleCreate"
+    />
     <UiFab @click="toggleComposer(true)">
       <PlusIcon class="h-6 w-6" />
     </UiFab>
@@ -78,7 +66,7 @@ const isComposerOpen = ref(false);
 const viewOptions = [
   { label: "今日", value: "today" },
   { label: "全部", value: "all" },
-  { label: "完成记录", value: "history" }
+  { label: "完成记录", value: "history" },
 ];
 
 onMounted(() => {
@@ -98,7 +86,7 @@ const filteredTasks = computed(() => {
   }
   if (activeView.value === "history") {
     return store.tasks.filter((task) =>
-      task.statusHistory.some((history) => history.status === "completed")
+      task.statusHistory.some((history) => history.status === "completed"),
     );
   }
   return store.tasks;
@@ -108,7 +96,7 @@ const completionRate = computed(() => {
   const total = store.tasks.length;
   if (!total) return 0;
   const completed = store.tasks.filter((task) =>
-    task.statusHistory?.some((history) => history.status === "completed")
+    task.statusHistory?.some((history) => history.status === "completed"),
   ).length;
   return Math.round((completed / total) * 100);
 });
@@ -122,7 +110,12 @@ function handleComplete(id: string) {
   store.markCompleted(id);
 }
 
-function handleCreate(payload: { title: string; startAt: string; frequency: string; notes?: string }) {
+function handleCreate(payload: {
+  title: string;
+  startAt: string;
+  frequency: string;
+  notes?: string;
+}) {
   store.addTask(payload);
 }
 
