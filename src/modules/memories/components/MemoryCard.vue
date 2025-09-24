@@ -35,6 +35,13 @@
 
     <div class="flex items-center justify-between text-xs text-content/50">
       <span>更新于 {{ createdInfo }}</span>
+      <button
+        type="button"
+        class="rounded-full border border-outline/40 px-3 py-1 text-[11px] font-medium text-primary hover:border-primary/60 hover:bg-primary/5"
+        @click.stop="emit('open', memory)"
+      >
+        查看详情
+      </button>
     </div>
   </UiCard>
 </template>

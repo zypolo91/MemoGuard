@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <section class="space-y-6 py-6">
     <PageHeader
       eyebrow="Memories Guardian"
@@ -37,7 +37,19 @@
       @close="closeComposer"
       @submit="handleUpsert"
     />
-    <MemoryDetailSheet :open="Boolean(detailMemory)" :memory="detailMemory" @close="closeDetail" @edit="editDetail" />
+    <MemoryDetailSheet
+      :open="Boolean(detailMemory)"
+      :memory="detailMemory"
+      @close="closeDetail"
+      @edit="editDetail"
+      @delete="prepareDelete"
+    />
+    <MemoryDeleteSheet
+      :open="Boolean(memoryPendingDelete)"
+      :memory="memoryPendingDelete"
+      @close="memoryPendingDelete = null"
+      @confirm="handleConfirmDelete"
+    />
 
     <UiFab @click="openComposer()">
       <PlusIcon class="h-6 w-6" />
@@ -54,6 +66,7 @@ import UiFab from "@/components/atoms/UiFab.vue";
 import MemoryCard from "@/modules/memories/components/MemoryCard.vue";
 import MemoryComposerSheet from "@/modules/memories/components/MemoryComposerSheet.vue";
 import MemoryDetailSheet from "@/modules/memories/components/MemoryDetailSheet.vue";
+import MemoryDeleteSheet from "@/modules/memories/components/MemoryDeleteSheet.vue";
 import MemoryFilters from "@/modules/memories/components/MemoryFilters.vue";
 import MemoryTimeline from "@/modules/memories/components/MemoryTimeline.vue";
 import SegmentedControl from "@/components/molecules/SegmentedControl.vue";
@@ -68,6 +81,7 @@ const activeTag = ref<string | null>(null);
 const isComposerOpen = ref(false);
 const editingMemory = ref<MemoryItem | null>(null);
 const detailMemory = ref<MemoryItem | null>(null);
+const memoryPendingDelete = ref<MemoryItem | null>(null);
 
 const viewOptions = [
   { label: "时间轴", value: "timeline" },
@@ -118,4 +132,37 @@ function editDetail() {
   openComposer(detailMemory.value);
   detailMemory.value = null;
 }
+
+function prepareDelete(id: string) {
+  const target = memories.items.find((item) => item.id === id) ?? null;
+  if (!target) return;
+  memoryPendingDelete.value = target;
+  detailMemory.value = null;
+}
+
+function handleConfirmDelete(id: string) {
+  if (!id) {
+    memoryPendingDelete.value = null;
+    return;
+  }
+
+  memories.removeMemory(id);
+  memoryPendingDelete.value = null;
+
+  if (detailMemory.value?.id === id) {
+    detailMemory.value = null;
+  }
+
+  if (editingMemory.value?.id === id) {
+    closeComposer();
+  }
+
+  if (activeTag.value && !memories.items.some((item) => item.tags.includes(activeTag.value as string))) {
+    activeTag.value = null;
+  }
+}
 </script>
+
+
+
+

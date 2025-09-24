@@ -15,6 +15,9 @@
             <h2 class="text-lg font-semibold text-content">{{ memory?.title }}</h2>
           </div>
           <div class="flex items-center gap-2">
+            <UiIconButton aria-label="删除" class="hover:text-danger" @click="requestDelete">
+              <TrashIcon class="h-5 w-5" />
+            </UiIconButton>
             <UiIconButton aria-label="编辑" @click="emit('edit')">
               <PencilSquareIcon class="h-5 w-5" />
             </UiIconButton>
@@ -107,7 +110,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { LinkIcon, PhotoIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { LinkIcon, PhotoIcon, PencilSquareIcon, TrashIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 import UiCard from "@/components/atoms/UiCard.vue";
 import UiIconButton from "@/components/atoms/UiIconButton.vue";
@@ -122,6 +125,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "close"): void;
   (e: "edit"): void;
+  (e: "delete", id: string): void;
 }>();
 
 const coverUrl = computed(() => {
@@ -135,6 +139,11 @@ const timelineText = computed(() => {
   const date = new Date(props.memory.eventDate);
   return date.toLocaleDateString("zh-CN", { dateStyle: "medium" });
 });
+
+function requestDelete() {
+  if (!props.memory) return;
+  emit("delete", props.memory.id);
+}
 
 function mediaIcon(type: MemoryMediaType) {
   switch (type) {
@@ -174,4 +183,3 @@ function isLink(item: MemoryMedia) {
   opacity: 0;
 }
 </style>
-

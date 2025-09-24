@@ -228,6 +228,13 @@ export const useMemoriesStore = defineStore("memories", () => {
     return updated;
   }
 
+  function removeMemory(id: string) {
+    const index = items.value.findIndex((item) => item.id === id);
+    if (index === -1) return;
+    const [removed] = items.value.splice(index, 1);
+    return removed;
+  }
+
   watch(
     items,
     (value) => {
@@ -245,6 +252,7 @@ export const useMemoriesStore = defineStore("memories", () => {
     allTags,
     fetchMemories,
     addMemory,
-    updateMemory
+    updateMemory,
+    removeMemory
   };
 });

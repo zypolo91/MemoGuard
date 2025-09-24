@@ -32,12 +32,34 @@ describe("memories store", () => {
     const store = useMemoriesStore();
 
     store.addMemory({
-      title: "测试回忆",
-      content: "一起散步的午后",
+      title: "初始回忆",
+      content: "一次散步的感受",
       eventDate: "2025-09-20"
     });
 
     expect(store.items.length).toBe(1);
-    expect(store.items[0]?.title).toBe("测试回忆");
+    expect(store.items[0]?.title).toBe("初始回忆");
+  });
+
+  it("removes a memory by id", () => {
+    const store = useMemoriesStore();
+    const first = store.addMemory({
+      title: "第一段记忆",
+      content: "记录当日的心情。",
+      eventDate: "2025-09-20"
+    });
+
+    store.addMemory({
+      title: "第二段记忆",
+      content: "这是第二次散步。",
+      eventDate: "2025-09-21"
+    });
+
+    expect(store.items.length).toBe(2);
+
+    store.removeMemory(first?.id ?? "");
+
+    expect(store.items.length).toBe(1);
+    expect(store.items[0]?.title).toBe("第二段记忆");
   });
 });

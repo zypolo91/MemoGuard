@@ -1,7 +1,7 @@
-﻿import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/",
@@ -9,8 +9,8 @@ const router = createRouter({
       component: () => import("@/modules/memories/MemoriesPage.vue"),
       meta: {
         icon: "Memory",
-        label: "记忆守护"
-      }
+        label: "记忆守护",
+      },
     },
     {
       path: "/tasks",
@@ -18,8 +18,8 @@ const router = createRouter({
       component: () => import("@/modules/tasks/TasksPage.vue"),
       meta: {
         icon: "Calendar",
-        label: "关怀任务"
-      }
+        label: "关怀任务",
+      },
     },
     {
       path: "/nutrition",
@@ -27,8 +27,8 @@ const router = createRouter({
       component: () => import("@/modules/diet/NutritionPage.vue"),
       meta: {
         icon: "Leaf",
-        label: "正念饮食"
-      }
+        label: "正念饮食",
+      },
     },
     {
       path: "/insights",
@@ -36,8 +36,8 @@ const router = createRouter({
       component: () => import("@/modules/insights/InsightsPage.vue"),
       meta: {
         icon: "Sparkle",
-        label: "资讯洞察"
-      }
+        label: "资讯洞察",
+      },
     },
     {
       path: "/profile",
@@ -45,10 +45,10 @@ const router = createRouter({
       component: () => import("@/modules/profile/ProfilePage.vue"),
       meta: {
         icon: "User",
-        label: "我的"
-      }
-    }
-  ]
+        label: "我的",
+      },
+    },
+  ],
 });
 
 export default router;
