@@ -6,7 +6,7 @@
       :class="[
         activeTag === null
           ? 'border-primary/60 bg-primary/10 text-primary'
-          : 'border-outline/40 bg-surface-muted/60 text-content/60 hover:text-primary'
+          : 'border-outline border-opacity-40 bg-surface-muted/60 text-content/60 hover:text-primary'
       ]"
       @click="$emit('update:activeTag', null)"
     >
@@ -20,7 +20,7 @@
       :class="[
         activeTag === tag
           ? 'border-primary/60 bg-primary/10 text-primary'
-          : 'border-outline/40 bg-surface-muted/60 text-content/60 hover:text-primary'
+          : 'border-outline border-opacity-40 bg-surface-muted/60 text-content/60 hover:text-primary'
       ]"
       @click="$emit('update:activeTag', tag)"
     >

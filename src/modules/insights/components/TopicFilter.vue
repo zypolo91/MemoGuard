@@ -8,7 +8,7 @@
       :class="[
         modelValue === topic
           ? 'border-primary/60 bg-primary/10 text-primary'
-          : 'border-outline/40 bg-surface-muted/60 text-content/60 hover:text-primary'
+          : 'border-outline border-opacity-40 bg-surface-muted/60 text-content/60 hover:text-primary'
       ]"
       @click="$emit('update:modelValue', modelValue === topic ? null : topic)"
     >

@@ -27,14 +27,25 @@ const props = withDefaults(defineProps<Props>(), {
 
 const attrs = useAttrs();
 
-const computedClassList = computed(() => [
-  "relative flex flex-col gap-4 rounded-3xl",
-  props.padding,
-  props.hoverable
-    ? "transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/20"
-    : "",
-  props.variant === "solid"
-    ? "border border-outline/40 bg-surface shadow-soft"
-    : "glass-card bg-white/80 shadow-soft dark:bg-surface-muted/80"
-]);
+const computedClassList = computed(() => {
+  const classes: Array<string | undefined> = [
+    "relative flex flex-col gap-4 rounded-3xl",
+    props.padding,
+    props.hoverable
+      ? "transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/20"
+      : undefined,
+    props.variant === "solid"
+      ? "border border-outline border-opacity-40 bg-surface shadow-soft"
+      : "glass-card bg-white/80 shadow-soft dark:bg-surface-muted/80"
+  ];
+
+  if (typeof attrs.class === "string") {
+    classes.push(attrs.class);
+  }
+
+  return classes.filter(Boolean);
+});
 </script>
+
+
+

@@ -8,7 +8,7 @@
         class="relative flex max-h-[72vh] w-full max-w-[720px] flex-col overflow-hidden rounded-3xl bg-surface shadow-2xl"
       >
         <header
-          class="sticky top-0 flex items-center justify-between border-b border-outline/40 bg-surface px-6 py-5 shadow-sm"
+          class="sticky top-0 flex items-center justify-between border-b border-outline border-opacity-40 bg-surface px-6 py-5 shadow-sm"
         >
           <div>
             <p class="text-xs uppercase tracking-[0.3em] text-primary/70">记忆详情</p>
@@ -78,7 +78,7 @@
                     <component :is="mediaIcon(item.type)" class="h-6 w-6" />
                   </div>
                   <div class="space-y-1 text-xs text-content/70">
-                    <p class="font-medium text-content">{{ item.name ?? formatMediaName(item) }}</p>
+                    <p class="max-w-[220px] break-words text-sm font-medium text-content">{{ item.name ?? formatMediaName(item) }}</p>
                     <a
                       v-if="isLink(item)"
                       :href="item.url"
@@ -93,7 +93,7 @@
                   :href="item.url"
                   target="_blank"
                   rel="noopener"
-                  class="rounded-full border border-outline/40 px-3 py-1 text-xs text-content/60"
+                  class="rounded-full border border-outline border-opacity-40 px-3 py-1 text-xs text-content/60"
                   >查看</a
                 >
               </UiCard>
@@ -174,3 +174,4 @@ function isLink(item: MemoryMedia) {
   opacity: 0;
 }
 </style>
+

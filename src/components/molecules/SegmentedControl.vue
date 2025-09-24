@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="inline-flex rounded-full border border-outline/40 bg-surface-muted/60 p-1 text-xs font-medium text-content/70">
+  <div class="inline-flex rounded-full border border-outline border-opacity-40 bg-surface-muted/60 p-1 text-xs font-medium text-content/70">
     <button
       v-for="option in options"
       :key="option.value"

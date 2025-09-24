@@ -1,72 +1,77 @@
 ﻿<template>
-  <section class="space-y-6 py-6">
+  <section class="space-y-6 pb-24">
     <PageHeader
       eyebrow="Care Tasks"
       title="关怀任务"
-      description="用清晰的任务面板掌控照护节奏。"
+      description="集中管理关怀提醒，随时掌握今日与全部安排。"
     />
 
-    <div class="flex items-center justify-between">
-      <h2 class="text-sm font-semibold text-content/70">任务视图</h2>
-      <SegmentedControl v-model="activeView" :options="viewOptions" />
-    </div>
+    <section class="space-y-2">
+      <TaskCalendarStrip
+        :tasks="tasks"
+        :entries="reminderEntries"
+        :selected-date="selectedOverviewDate"
+        @select-day="handleSelectDay"
+      />
+      <p class="text-xs text-content/60">点击日期查看当天的提醒详情</p>
+    </section>
 
-    <div class="grid gap-5 lg:grid-cols-[2fr,1fr]">
-      <div class="space-y-5">
-        <TaskList :tasks="filteredTasks" @complete="handleComplete" />
-      </div>
-      <div class="space-y-5">
-        <UiCard padding="p-6" class="space-y-3">
-          <h3 class="text-base font-semibold text-content">即将提醒</h3>
-          <ul class="space-y-3 text-sm text-content/70">
-            <li v-for="item in upcoming" :key="item.id" class="flex items-center justify-between">
-              <span>{{ item.title }}</span>
-              <span class="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary">{{
-                formatTime(item.startAt)
-              }}</span>
-            </li>
-          </ul>
-          <p v-if="!upcoming.length" class="text-sm text-content/60">暂无近期开启的提醒。</p>
-        </UiCard>
-        <TaskCalendarStrip :tasks="tasks" />
-        <ReminderLog :entries="reminderLog" />
-      </div>
-    </div>
+    <SegmentedControl v-model="taskFilter" :options="filterOptions" />
 
-    <TaskComposerSheet
-      :open="isComposerOpen"
-      @close="toggleComposer(false)"
-      @submit="handleCreate"
+    <div v-if="displayedTasks.length" class="space-y-4">
+      <TaskList :tasks="displayedTasks" @edit="openTaskComposer" @delete="prepareDeleteTask" />
+    </div>
+    <p v-else class="rounded-2xl bg-surface-muted/60 px-6 py-10 text-center text-sm text-content/60">
+      当前筛选下暂无关怀任务，点击右下角按钮即可创建。
+    </p>
+
+    <TaskComposerSheet :open="isComposerOpen" :task="editingTask" @close="closeComposer" @submit="handleTaskSubmit" />
+    <TaskDayDetailSheet
+      :open="isDayDetailOpen"
+      :date="selectedOverviewDate"
+      :entries="selectedDayEntries"
+      @close="closeDayDetail"
     />
-    <UiFab @click="toggleComposer(true)">
+    <TaskDeleteSheet
+      :open="Boolean(taskPendingDelete)"
+      :task="taskPendingDelete"
+      @close="taskPendingDelete = null"
+      @confirm="handleConfirmDelete"
+    />
+
+    <UiFab aria-label="新增关怀任务" @click="openTaskComposer()">
       <PlusIcon class="h-6 w-6" />
     </UiFab>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 
-import UiCard from "@/components/atoms/UiCard.vue";
 import UiFab from "@/components/atoms/UiFab.vue";
 import PageHeader from "@/components/molecules/PageHeader.vue";
 import SegmentedControl from "@/components/molecules/SegmentedControl.vue";
-import ReminderLog from "@/modules/tasks/components/ReminderLog.vue";
 import TaskCalendarStrip from "@/modules/tasks/components/TaskCalendarStrip.vue";
 import TaskComposerSheet from "@/modules/tasks/components/TaskComposerSheet.vue";
+import TaskDayDetailSheet from "@/modules/tasks/components/TaskDayDetailSheet.vue";
+import TaskDeleteSheet from "@/modules/tasks/components/TaskDeleteSheet.vue";
 import TaskList from "@/modules/tasks/components/TaskList.vue";
 import { useTasksStore } from "@/stores/tasks";
+import type { CareTask, ReminderLogEntry } from "@/stores/tasks";
 
 const store = useTasksStore();
 
-const activeView = ref("today");
+const taskFilter = ref<"today" | "all">("today");
 const isComposerOpen = ref(false);
+const editingTask = ref<CareTask | null>(null);
+const taskPendingDelete = ref<CareTask | null>(null);
+const selectedOverviewDate = ref<string | null>(null);
+const isDayDetailOpen = ref(false);
 
-const viewOptions = [
+const filterOptions = [
   { label: "今日", value: "today" },
-  { label: "全部", value: "all" },
-  { label: "完成记录", value: "history" },
+  { label: "全部", value: "all" }
 ];
 
 onMounted(() => {
@@ -76,55 +81,143 @@ onMounted(() => {
 });
 
 const tasks = computed(() => store.tasks);
-const reminderLog = computed(() => store.reminderLog);
-const upcoming = computed(() => store.upcoming);
-const todayCount = computed(() => store.scheduledToday.length);
+const reminderEntries = computed(() => store.reminderLog);
 
-const filteredTasks = computed(() => {
-  if (activeView.value === "today") {
+const defaultCalendarDate = computed(() => {
+  const todayKey = toDateKey(new Date().toISOString());
+  const keys = new Set<string>();
+  tasks.value.forEach((task) => {
+    const key = toDateKey(task.startAt);
+    if (key) keys.add(key);
+  });
+  reminderEntries.value.forEach((entry) => {
+    const key = toDateKey(entry.timestamp);
+    if (key) keys.add(key);
+  });
+  const sorted = Array.from(keys)
+    .filter((key) => dateFromKey(key).getTime() >= dateFromKey(todayKey).getTime())
+    .sort((a, b) => dateFromKey(a).getTime() - dateFromKey(b).getTime());
+  return sorted[0] ?? todayKey;
+});
+
+watch(
+  () => defaultCalendarDate.value,
+  (value) => {
+    if (!selectedOverviewDate.value && value) {
+      selectedOverviewDate.value = value;
+    }
+  },
+  { immediate: true }
+);
+
+const displayedTasks = computed(() => {
+  if (taskFilter.value === "today") {
     return store.scheduledToday;
   }
-  if (activeView.value === "history") {
-    return store.tasks.filter((task) =>
-      task.statusHistory.some((history) => history.status === "completed"),
-    );
-  }
-  return store.tasks;
+  return tasks.value;
 });
 
-const completionRate = computed(() => {
-  const total = store.tasks.length;
-  if (!total) return 0;
-  const completed = store.tasks.filter((task) =>
-    task.statusHistory?.some((history) => history.status === "completed"),
-  ).length;
-  return Math.round((completed / total) * 100);
+const selectedDayEntries = computed<ReminderLogEntry[]>(() => {
+  if (!selectedOverviewDate.value) return [];
+  const dateKey = selectedOverviewDate.value;
+
+  const taskEntries = tasks.value
+    .filter((task) => toDateKey(task.startAt) === dateKey)
+    .map((task) => {
+      const matchingLogs = reminderEntries.value
+        .filter((entry) => entry.taskId === task.id && toDateKey(entry.timestamp) === dateKey)
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+      if (matchingLogs.length) {
+        return matchingLogs[0];
+      }
+
+      return {
+        id: `${task.id}-${dateKey}`,
+        taskId: task.id,
+        taskTitle: task.title,
+        status: "pending" as ReminderLogEntry["status"],
+        timestamp: task.startAt
+      };
+    });
+
+  const extraEntries = reminderEntries.value.filter(
+    (entry) =>
+      toDateKey(entry.timestamp) === dateKey &&
+      !tasks.value.some((task) => task.id === entry.taskId && toDateKey(task.startAt) === dateKey)
+  );
+
+  return [...taskEntries, ...extraEntries];
 });
 
-const nextReminder = computed(() => {
-  if (!upcoming.value.length) return "--";
-  return formatTime(upcoming.value[0]?.startAt ?? "");
-});
-
-function handleComplete(id: string) {
-  store.markCompleted(id);
+function openTaskComposer(task?: CareTask) {
+  editingTask.value = task ?? null;
+  isComposerOpen.value = true;
 }
 
-function handleCreate(payload: {
+function closeComposer() {
+  isComposerOpen.value = false;
+  editingTask.value = null;
+}
+
+function prepareDeleteTask(task: CareTask) {
+  taskPendingDelete.value = task;
+}
+
+function handleConfirmDelete(id: string) {
+  if (!id) return;
+  store.removeTask(id);
+  taskPendingDelete.value = null;
+}
+
+function handleTaskSubmit(payload: {
+  mode: "create" | "edit";
+  id?: string;
   title: string;
   startAt: string;
   frequency: string;
-  notes?: string;
+  notes: string;
 }) {
-  store.addTask(payload);
+  if (payload.mode === "edit" && payload.id) {
+    store.updateTask(payload.id, {
+      title: payload.title,
+      startAt: payload.startAt,
+      frequency: payload.frequency,
+      notes: payload.notes
+    });
+  } else {
+    store.addTask({
+      title: payload.title,
+      startAt: payload.startAt,
+      frequency: payload.frequency,
+      notes: payload.notes
+    });
+  }
+  closeComposer();
 }
 
-function toggleComposer(open: boolean) {
-  isComposerOpen.value = open;
+function handleSelectDay(date: string) {
+  selectedOverviewDate.value = date;
+  isDayDetailOpen.value = true;
 }
 
-function formatTime(value: string) {
-  if (!value) return "--";
-  return new Date(value).toLocaleString("zh-CN", { dateStyle: "medium", timeStyle: "short" });
+function closeDayDetail() {
+  isDayDetailOpen.value = false;
+}
+
+function toDateKey(value?: string) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function dateFromKey(key: string) {
+  return new Date(`${key}T00:00:00`);
 }
 </script>
+
+

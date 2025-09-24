@@ -1,5 +1,5 @@
 ﻿<template>
-  <header class="sticky top-0 z-30 border-b border-outline/40 bg-surface/95 backdrop-blur-xl">
+  <header class="sticky top-0 z-30 border-b border-outline border-opacity-40 bg-surface/95 backdrop-blur-xl">
     <div class="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-4">
       <div>
         <p class="text-xs font-semibold uppercase tracking-[0.4em] text-primary/80">{{ title }}</p>

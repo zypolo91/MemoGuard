@@ -1,6 +1,6 @@
 ﻿<template>
   <div
-    class="inline-flex items-center justify-center overflow-hidden rounded-full border border-outline/40 bg-surface-muted"
+    class="inline-flex items-center justify-center overflow-hidden rounded-full border border-outline border-opacity-40 bg-surface-muted"
     :class="sizeClass"
   >
     <img v-if="src" :src="src" :alt="alt" class="h-full w-full object-cover" />

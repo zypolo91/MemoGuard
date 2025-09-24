@@ -1,299 +1,307 @@
 ﻿<template>
   <section class="space-y-6 py-6">
     <PageHeader
-      eyebrow="Mindful Nutrition"
-      title="滋养饮食"
-      description="精选家常菜谱与营养指南，搭配智能提醒守护日常饮食。"
-    />
-
-        <Transition name="fade">
-      <div v-if="deleteTargetId" class="fixed inset-0 z-[95] flex items-center justify-center bg-black/50">
-        <div class="w-full max-w-sm rounded-3xl bg-surface px-6 py-6 text-sm text-content shadow-xl">
-          <h3 class="text-base font-semibold">确认删除？</h3>
-          <p class="mt-2 text-xs text-content/60">删除后无法恢复，相关记录也会同步移除。</p>
-          <div class="mt-5 flex items-center gap-3">
-            <button type="button" class="flex-1 rounded-full border border-outline/40 px-4 py-2 text-xs text-content/60" @click="cancelDelete">
-              取消
-            </button>
-            <button type="button" class="flex-1 rounded-full bg-danger px-4 py-2 text-xs font-medium text-white" @click="confirmDelete">
-              确认删除
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
-
-    <div class="flex flex-wrap gap-2">
-      <button
-        v-for="option in filterOptions"
-        :key="option.value"
-        type="button"
-        class="rounded-full border px-4 py-2 text-xs font-medium transition"
-        :class="
-          activeFilter === option.value
-            ? 'border-primary bg-primary/10 text-primary'
-            : 'border-outline/40 bg-surface-muted/60 text-content/60 hover:text-primary'
-        "
-        @click="setFilter(option.value)"
-      >
-        {{ option.label }}
-      </button>
-    </div>
-
-    <div v-if="!visibleRecipes.length" class="rounded-3xl bg-surface-muted/60 px-6 py-10 text-center text-sm text-content/60">
-      暂无符合条件的菜谱，试着调整筛选或新增一条记录吧。
-    </div>
-
-    <div v-else class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-      <article
-        v-for="recipe in visibleRecipes"
-        :key="recipe.id"
-        class="group relative flex cursor-pointer flex-col overflow-hidden rounded-[28px] border border-outline/10 bg-surface shadow-lg transition duration-200 hover:-translate-y-1 hover:shadow-2xl"
-        @click="openDetail(recipe.id)"
-      >
-        <div class="relative h-44 w-full overflow-hidden bg-surface-muted">
-          <img v-if="recipe.heroImage" :src="recipe.heroImage" alt="" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
-          <div v-else class="flex h-full w-full items-center justify-center text-xs text-content/40">暂无封面</div>
-          <div class="absolute inset-x-0 top-0 flex items-start justify-between p-4">
-            <span class="rounded-full bg-black/40 px-3 py-1 text-xs text-white">
-              共 {{ totalTime(recipe) }} 分钟 · {{ difficultyMap[recipe.difficulty] }}
-            </span>
-            <div class="flex items-center gap-2">
-              <button
-                type="button"
-                class="rounded-full bg-black/40 p-2 text-white transition hover:bg-black/60"
-                :aria-pressed="recipe.isBookmarked"
-                @click.stop="toggleBookmark(recipe.id)"
-              >
-                <component :is="recipe.isBookmarked ? BookmarkSolidIcon : BookmarkIcon" class="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                class="rounded-full bg-black/40 p-2 text-white transition hover:bg-black/60"
-                @click.stop="editRecipe(recipe.id)"
-              >
-                <PencilSquareIcon class="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                class="rounded-full bg-black/40 p-2 text-white transition hover:bg-danger/80"
-                @click.stop="requestDelete(recipe.id)"
-              >
-                <TrashIcon class="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-1 flex-col gap-3 px-5 py-5">
-          <div class="space-y-1">
-            <h3 class="text-base font-semibold text-content">{{ recipe.title }}</h3>
-            <p class="line-clamp-2 text-sm leading-relaxed text-content/70">{{ recipe.description }}</p>
-          </div>
-          <div class="flex flex-wrap gap-2 text-[11px] text-content/50">
-            <span v-for="tag in recipe.tags" :key="tag" class="rounded-full bg-primary/10 px-3 py-1 text-primary">#{{ tag }}</span>
-          </div>
-          <div class="mt-auto flex flex-wrap gap-2 text-[11px] text-content/60">
-            <span class="rounded-full bg-surface-muted px-3 py-1">蛋白质 {{ recipe.nutrition?.protein ?? '--' }} g</span>
-            <span class="rounded-full bg-surface-muted px-3 py-1">热量 {{ recipe.nutrition?.calories ?? '--' }} kcal</span>
-          </div>
-        </div>
-      </article>
-    </div>
-
-    <RecipeWorkspaceSheet
-      :open="workspace.open"
-      :recipe="activeRecipe"
-      :mode="workspace.mode"
-      @close="closeWorkspace"
-      @submit="handleWorkspaceSubmit"
-      @delete="confirmDeleteFromWorkspace"
-      @toggleBookmark="toggleBookmark"
-      @changeMode="handleWorkspaceModeChange"
+      eyebrow="Biomarker Tracking"
+      title="评估指标"
+      description="集中记录量表得分与生物标志物，追踪 tau / Aβ 的变化趋势。"
     />
 
     <Transition name="fade">
-      <div v-if="deleteTargetId" class="fixed inset-0 z-[95] flex items-center justify-center bg-black/50">
-        <div class="w-full max-w-sm rounded-3xl bg-surface px-6 py-6 text-sm text-content shadow-xl">
-          <h3 class="text-base font-semibold">确认删除？</h3>
-          <p class="mt-2 text-xs text-content/60">删除后无法恢复，相关记录也会同步移除。</p>
-          <div class="mt-5 flex items-center gap-3">
-            <button type="button" class="flex-1 rounded-full border border-outline/40 px-4 py-2 text-xs text-content/60" @click="cancelDelete">
-              取消
-            </button>
-            <button type="button" class="flex-1 rounded-full bg-danger px-4 py-2 text-xs font-medium text-white" @click="confirmDelete">
-              确认删除
-            </button>
-          </div>
-        </div>
+      <div
+        v-if="feedback.visible"
+        class="rounded-3xl border border-outline/30 bg-surface-muted/60 px-5 py-3 text-xs"
+        :class="feedback.tone === 'success' ? 'text-success' : feedback.tone === 'warning' ? 'text-danger' : 'text-primary'"
+      >
+        {{ feedback.message }}
       </div>
     </Transition>
 
-    <UiFab @click="createRecipe">
-      <PlusIcon class="h-6 w-6" />
-    </UiFab>
+    <div class="grid gap-5 lg:grid-cols-[1.2fr,1fr]">
+      <UiCard padding="p-6" class="space-y-5">
+        <header class="flex flex-wrap items-center justify-between gap-3">
+          <div class="space-y-1">
+            <h3 class="text-base font-semibold text-content">评估时间线</h3>
+            <p class="text-xs text-content/60">按评估类型查看每次测评的数值与状态。</p>
+          </div>
+          <button
+            type="button"
+            class="flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-xs font-medium text-white transition hover:bg-primary/90"
+            @click="openCreate"
+          >
+            <PlusIcon class="h-4 w-4" />
+            新增评估
+          </button>
+        </header>
+
+        <div class="flex flex-wrap items-center gap-3 text-[11px] text-content/60">
+          <label class="flex items-center gap-2">
+            <span>评估类型</span>
+            <select v-model="timelineTemplateId" class="filter-control">
+              <option value="all">全部</option>
+              <option
+                v-for="option in templateOptions"
+                :key="option.id"
+                :value="option.id"
+              >
+                {{ option.label }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <div
+          v-if="!timelineEntries.length"
+          class="grid min-h-[220px] place-items-center rounded-3xl border border-dashed border-outline border-opacity-40 bg-surface-muted/50 px-6 text-xs text-content/60"
+        >
+          暂无评估记录，可点击右上角按钮补充一次测评。
+        </div>
+
+        <ol v-else class="space-y-4">
+          <li
+            v-for="entry in timelineEntries"
+            :key="entry.id"
+            class="rounded-3xl border border-outline/20 bg-surface-muted/40 px-5 py-4 shadow-soft"
+          >
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="space-y-1">
+                <p class="text-sm font-semibold text-content">
+                  {{ entry.label }} · {{ formatDate(entry.date) }}
+                </p>
+                <p class="text-xs text-content/60">{{ entry.status }}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <UiIconButton aria-label="编辑评估" @click="openEdit(entry.id)">
+                  <PencilSquareIcon class="h-4 w-4" />
+                </UiIconButton>
+                <UiIconButton
+                  aria-label="删除评估"
+                  class="text-danger"
+                  @click="requestDelete(entry.id)"
+                >
+                  <TrashIcon class="h-4 w-4" />
+                </UiIconButton>
+              </div>
+            </div>
+            <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-content/70">
+              <span>{{ metricLabels[entry.metric] }}：{{ formatEntryValue(entry) }}</span>
+            </div>
+            <p v-if="entry.notes" class="mt-3 text-xs leading-relaxed text-content/70">
+              {{ entry.notes }}
+            </p>
+          </li>
+        </ol>
+      </UiCard>
+
+      <UiCard padding="p-6" class="space-y-4">
+        <div class="flex flex-wrap items-center gap-3 text-[11px] text-content/60">
+          <label class="flex items-center gap-2">
+            <span>图表评估</span>
+            <select v-model="chartTemplateId" class="filter-control">
+              <option value="">请选择</option>
+              <option
+                v-for="option in templateOptions"
+                :key="option.id"
+                :value="option.id"
+                :disabled="!option.hasData"
+              >
+                {{ option.label }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <PatientProgressChart
+          :assessments="assessments"
+          :template-id="chartTemplateId || null"
+          :templates="assessmentTemplates"
+        />
+      </UiCard>
+    </div>
+
+    <PatientAssessmentSheet
+      :open="workspace.open"
+      :mode="workspace.mode"
+      :assessment="selectedAssessment"
+      @close="closeWorkspace"
+      @submit="handleWorkspaceSubmit"
+      @delete="handleWorkspaceDelete"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from "vue";
-import { BookmarkIcon, PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/vue/24/outline";
-import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/vue/24/solid";
+import { computed, reactive, ref, watch } from "vue";
+import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/vue/24/outline";
 
-import UiFab from "@/components/atoms/UiFab.vue";
+import UiCard from "@/components/atoms/UiCard.vue";
+import UiIconButton from "@/components/atoms/UiIconButton.vue";
 import PageHeader from "@/components/molecules/PageHeader.vue";
-import RecipeWorkspaceSheet from "@/modules/diet/components/RecipeWorkspaceSheet.vue";
-import { useRecipesStore } from "@/stores/recipes";
-import type { Recipe, RecipePayload } from "@/stores/recipes";
+import PatientAssessmentSheet from "@/modules/diet/components/PatientAssessmentSheet.vue";
+import PatientProgressChart from "@/modules/diet/components/PatientProgressChart.vue";
+import { usePatientStore, assessmentTemplates } from "@/stores/patient";
+import type { AssessmentMetric, AssessmentTemplate, PatientAssessment } from "@/stores/patient";
 
-type FilterValue = "recommend" | "quick" | "bookmark" | "all";
-type FeedbackTone = "success" | "info" | "warning";
-
-type WorkspaceMode = "view" | "edit" | "create";
-
-const store = useRecipesStore();
-
-const activeFilter = ref<FilterValue>("recommend");
-const workspace = reactive<{ open: boolean; mode: WorkspaceMode; recipeId: string | null }>({ open: false, mode: "view", recipeId: null });
-const deleteTargetId = ref<string | null>(null);
-const feedback = reactive<{ visible: boolean; message: string; tone: FeedbackTone }>({ visible: false, message: "", tone: "success" });
-
-const filterOptions: Array<{ label: string; value: FilterValue }> = [
-  { label: "推荐", value: "recommend" },
-  { label: "快速", value: "quick" },
-  { label: "收藏", value: "bookmark" },
-  { label: "全部", value: "all" }
-];
-
-onMounted(() => {
-  if (store.state === "idle") {
-    store.fetchRecipes();
-  }
-});
-
-const recipes = computed(() => store.recipes);
-const bookmarked = computed(() => store.bookmarked);
-const quickMeals = computed(() => store.quickMeals);
-const recommendations = computed(() => store.recommendations);
-
-const visibleRecipes = computed<Recipe[]>(() => {
-  switch (activeFilter.value) {
-    case "bookmark":
-      return bookmarked.value;
-    case "quick":
-      return quickMeals.value;
-    case "recommend":
-      return recommendations.value.length ? recommendations.value : recipes.value;
-    default:
-      return recipes.value;
-  }
-});
-
-const activeRecipe = computed(() => (workspace.recipeId ? recipes.value.find((item) => item.id === workspace.recipeId) ?? null : null));
-
-watch(recipes, (list) => {
-  if (workspace.recipeId && !list.some((recipe) => recipe.id === workspace.recipeId)) {
-    workspace.recipeId = null;
-    workspace.mode = "view";
-  }
-  if (deleteTargetId.value && !list.some((recipe) => recipe.id === deleteTargetId.value)) {
-    deleteTargetId.value = null;
-  }
-});
-
-const difficultyMap: Record<string, string> = {
-  easy: "轻松",
-  medium: "适中",
-  hard: "挑战"
+const metricLabels: Record<AssessmentMetric, string> = {
+  score: "认知得分",
+  tau: "Tau 蛋白",
+  amyloid: "Aβ 蛋白"
 };
 
-function totalTime(recipe: Recipe): number {
-  return (recipe.prepTime ?? 0) + (recipe.cookTime ?? 0);
-}
+const store = usePatientStore();
 
-function setFilter(value: FilterValue) {
-  activeFilter.value = value;
-}
+const assessments = computed(() => store.assessments);
 
-function openDetail(id: string) {
-  workspace.recipeId = id;
-  workspace.mode = "view";
-  workspace.open = true;
-}
+const timelineTemplateId = ref<string>("all");
+const chartTemplateId = ref<string>("");
 
-function createRecipe() {
-  workspace.recipeId = null;
+const templateOptions = computed(() =>
+  assessmentTemplates.map((template) => ({
+    ...template,
+    hasData: assessments.value.some((entry) => entry.templateId === template.id)
+  }))
+);
+
+watch(
+  templateOptions,
+  (options) => {
+    if (timelineTemplateId.value !== "all" && !options.some((item) => item.id === timelineTemplateId.value)) {
+      timelineTemplateId.value = "all";
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  [templateOptions, assessments],
+  () => {
+    const available = templateOptions.value.filter((item) => item.hasData);
+    if (!available.length) {
+      chartTemplateId.value = "";
+      return;
+    }
+    if (!available.some((item) => item.id === chartTemplateId.value)) {
+      chartTemplateId.value = available[0].id;
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  timelineTemplateId,
+  (value) => {
+    if (value === "all") return;
+    const option = templateOptions.value.find((item) => item.id === value && item.hasData);
+    if (option) {
+      chartTemplateId.value = option.id;
+    }
+  }
+);
+
+const templateMap = computed(() => new Map<string, AssessmentTemplate>(templateOptions.value.map((item) => [item.id, item])));
+
+const timelineEntries = computed(() => {
+  const selected = timelineTemplateId.value;
+  const list = selected === "all"
+    ? [...assessments.value]
+    : assessments.value.filter((entry) => entry.templateId === selected);
+  return list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+});
+
+const workspace = reactive({
+  open: false,
+  mode: "create" as "create" | "edit",
+  assessmentId: null as string | null
+});
+
+const feedback = reactive({
+  visible: false,
+  message: "",
+  tone: "info" as "success" | "warning" | "info"
+});
+
+const selectedAssessment = computed<PatientAssessment | null>(() => {
+  if (!workspace.assessmentId) return null;
+  return assessments.value.find((entry) => entry.id === workspace.assessmentId) ?? null;
+});
+
+type AssessmentPayload = {
+  date: string;
+  templateId: string;
+  label?: string;
+  metric?: AssessmentMetric;
+  value: number;
+  unit: string;
+  status: string;
+  notes?: string;
+};
+
+function openCreate() {
   workspace.mode = "create";
+  workspace.assessmentId = null;
   workspace.open = true;
 }
 
-function editRecipe(id: string) {
-  workspace.recipeId = id;
+function openEdit(id: string) {
   workspace.mode = "edit";
+  workspace.assessmentId = id;
   workspace.open = true;
 }
 
 function closeWorkspace() {
   workspace.open = false;
-  workspace.mode = "view";
-  workspace.recipeId = null;
+  workspace.assessmentId = null;
+  workspace.mode = "create";
 }
 
-function toggleBookmark(id: string) {
-  store.toggleBookmark(id);
-  showFeedback("收藏状态已更新", "info");
+function handleWorkspaceSubmit(payload: { id?: string; data: AssessmentPayload }) {
+  const { id, data } = payload;
+  if (id) {
+    store.updateAssessment(id, data);
+    showFeedback("评估记录已更新", "success");
+  } else {
+    store.addAssessment(data);
+    showFeedback("新的评估记录已保存", "success");
+  }
+  closeWorkspace();
+}
+
+function handleWorkspaceDelete(id: string) {
+  requestDelete(id);
 }
 
 function requestDelete(id: string) {
-  deleteTargetId.value = id;
-}
-
-function confirmDeleteFromWorkspace(id: string) {
-  deleteTargetId.value = id;
-}
-
-function cancelDelete() {
-  deleteTargetId.value = null;
-}
-
-function confirmDelete() {
-  if (!deleteTargetId.value) return;
-  store.removeRecipe(deleteTargetId.value);
-  if (workspace.recipeId === deleteTargetId.value) {
+  const confirmed = typeof window !== "undefined" ? window.confirm("确定要删除该评估记录吗？") : true;
+  if (!confirmed) return;
+  store.removeAssessment(id);
+  if (workspace.assessmentId === id) {
     closeWorkspace();
   }
-  showFeedback("菜谱已删除", "warning");
-  deleteTargetId.value = null;
+  showFeedback("评估记录已删除", "warning");
 }
 
-function handleWorkspaceSubmit(payload: { id?: string; data: RecipePayload }) {
-  const { id, data } = payload;
-  if (id) {
-    store.updateRecipe(id, data);
-    workspace.recipeId = id;
-    workspace.mode = "view";
-    showFeedback("菜谱已更新", "success");
-  } else {
-    const newId = store.addRecipe(data);
-    workspace.recipeId = newId;
-    workspace.mode = "view";
-    showFeedback("菜谱已创建", "success");
-  }
-  workspace.open = true;
-}
-
-function handleWorkspaceModeChange(mode: "view" | "edit") {
-  if (workspace.mode !== "create") {
-    workspace.mode = mode;
-  }
-}
-
-function showFeedback(message: string, tone: FeedbackTone) {
+function showFeedback(message: string, tone: "success" | "warning" | "info") {
   feedback.message = message;
   feedback.tone = tone;
   feedback.visible = true;
   window.setTimeout(() => {
     feedback.visible = false;
-  }, 2600);
+  }, 2500);
+}
+
+function formatEntryValue(entry: PatientAssessment) {
+  if (entry.value === null) return "--";
+  const template = templateMap.value.get(entry.templateId ?? "");
+  const digits = entry.metric === "score" ? 1 : 2;
+  const formatter = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: digits });
+  const unit = entry.unit || template?.defaultUnit || "";
+  return `${formatter.format(entry.value)} ${unit}`.trim();
+}
+
+function formatDate(value: string) {
+  if (!value) return "--";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" }).format(date);
 }
 </script>
 
@@ -306,5 +314,9 @@ function showFeedback(message: string, tone: FeedbackTone) {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.filter-control {
+  @apply rounded-full border border-outline border-opacity-40 bg-surface-muted px-3 py-1 text-xs text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-30;
 }
 </style>

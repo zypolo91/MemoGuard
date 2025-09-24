@@ -13,6 +13,14 @@ export interface TaskHistory {
   timestamp: string;
 }
 
+export interface ReminderLogEntry {
+  id: string;
+  taskId: string;
+  taskTitle: string;
+  status: TaskStatus;
+  timestamp: string;
+}
+
 export interface CareTask {
   id: string;
   title: string;
@@ -49,18 +57,24 @@ export const useTasksStore = defineStore("tasks", () => {
     [...tasks.value].sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime()).slice(0, 5)
   );
 
-  const reminderLog = computed(() =>
-    tasks.value
-      .flatMap((task) =>
-        task.statusHistory.map((history) => ({
-          title: task.title,
-          status: history.status,
-          timestamp: history.timestamp
-        }))
-      )
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, 5)
-  );
+  const reminderLog = computed<ReminderLogEntry[]>(() => {
+    const dedup = new Map<string, ReminderLogEntry>();
+    tasks.value.forEach((task) => {
+      task.statusHistory.forEach((history) => {
+        const key = `${task.id}-${history.timestamp}`;
+        if (!dedup.has(key)) {
+          dedup.set(key, {
+            id: key,
+            taskId: task.id,
+            taskTitle: task.title,
+            status: history.status,
+            timestamp: history.timestamp
+          });
+        }
+      });
+    });
+    return Array.from(dedup.values()).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  });
 
   async function fetchTasks() {
     state.value = "loading";
@@ -110,6 +124,69 @@ export const useTasksStore = defineStore("tasks", () => {
     tasks.value = [newTask, ...tasks.value];
   }
 
+  function updateTask(id: string, updates: Partial<Omit<CareTask, "id">>) {
+    tasks.value = tasks.value.map((task) => (task.id === id ? { ...task, ...updates } : task));
+  }
+
+  function removeTask(id: string) {
+    tasks.value = tasks.value.filter((task) => task.id !== id);
+  }
+
+  function normalizeTimestamp(value?: string): string {
+    if (!value) return new Date().toISOString();
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return new Date().toISOString();
+    }
+    return date.toISOString();
+  }
+
+  function ensureUniqueTimestamp(task: CareTask, desired: string, originalTimestamp?: string): string {
+    const existing = new Set(task.statusHistory.map((history) => history.timestamp));
+    if (originalTimestamp) {
+      existing.delete(originalTimestamp);
+    }
+    let candidate = desired;
+    while (existing.has(candidate)) {
+      candidate = new Date(new Date(candidate).getTime() + 1000).toISOString();
+    }
+    return candidate;
+  }
+
+  function addReminderEntry(taskId: string, entry: TaskHistory) {
+    const task = tasks.value.find((item) => item.id === taskId);
+    if (!task) return;
+    const normalized = normalizeTimestamp(entry.timestamp);
+    const timestamp = ensureUniqueTimestamp(task, normalized);
+    const nextEntry: TaskHistory = {
+      status: entry.status,
+      timestamp
+    };
+    task.statusHistory = [...task.statusHistory, nextEntry].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    );
+  }
+
+  function updateReminderEntry(taskId: string, originalTimestamp: string, updates: Partial<TaskHistory>) {
+    const task = tasks.value.find((item) => item.id === taskId);
+    if (!task) return;
+    const normalized = updates.timestamp ? normalizeTimestamp(updates.timestamp) : originalTimestamp;
+    const timestamp = ensureUniqueTimestamp(task, normalized, originalTimestamp);
+    task.statusHistory = task.statusHistory.map((history) => {
+      if (history.timestamp !== originalTimestamp) return history;
+      return {
+        status: updates.status ?? history.status,
+        timestamp
+      };
+    }).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  }
+
+  function removeReminderEntry(taskId: string, timestamp: string) {
+    const task = tasks.value.find((item) => item.id === taskId);
+    if (!task) return;
+    task.statusHistory = task.statusHistory.filter((history) => history.timestamp !== timestamp);
+  }
+
   watch(
     tasks,
     (value) => saveState(STORAGE_KEY, value),
@@ -125,6 +202,14 @@ export const useTasksStore = defineStore("tasks", () => {
     reminderLog,
     fetchTasks,
     markCompleted,
-    addTask
+    addTask,
+    updateTask,
+    removeTask,
+    addReminderEntry,
+    updateReminderEntry,
+    removeReminderEntry
   };
 });
+
+
+

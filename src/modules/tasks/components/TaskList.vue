@@ -1,6 +1,12 @@
 ﻿<template>
   <div class="space-y-4">
-    <TaskCard v-for="task in tasks" :key="task.id" :task="task" @complete="$emit('complete', $event)" />
+    <TaskCard
+      v-for="task in tasks"
+      :key="task.id"
+      :task="task"
+      @edit="$emit('edit', $event)"
+      @delete="$emit('delete', $event)"
+    />
   </div>
 </template>
 
@@ -11,6 +17,7 @@ import type { CareTask } from "@/stores/tasks";
 defineProps<{ tasks: CareTask[] }>();
 
 defineEmits<{
-  (e: "complete", id: string): void;
+  (e: "edit", task: CareTask): void;
+  (e: "delete", task: CareTask): void;
 }>();
 </script>

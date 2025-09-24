@@ -10,7 +10,7 @@
           <p class="font-medium text-content">{{ entry.title }}</p>
           <p class="text-xs text-content/60">{{ formatDate(entry.timestamp) }}</p>
         </div>
-        <span class="rounded-full border border-outline/40 px-3 py-1 text-xs text-primary/80">{{ entry.status }}</span>
+        <span class="rounded-full border border-outline border-opacity-40 px-3 py-1 text-xs text-primary/80">{{ entry.status }}</span>
       </li>
     </ul>
   </UiCard>

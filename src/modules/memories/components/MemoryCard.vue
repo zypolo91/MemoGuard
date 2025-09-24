@@ -35,9 +35,6 @@
 
     <div class="flex items-center justify-between text-xs text-content/50">
       <span>更新于 {{ createdInfo }}</span>
-      <button type="button" class="text-primary underline-offset-2 hover:underline" @click.stop="emit('open', memory)">
-        查看详情
-      </button>
     </div>
   </UiCard>
 </template>
@@ -55,11 +52,15 @@ const props = defineProps<{ memory: MemoryItem }>();
 const emit = defineEmits<{ (e: "open", memory: MemoryItem): void }>();
 
 const formattedDate = computed(() =>
-  new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" }).format(new Date(props.memory.eventDate))
+  new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" }).format(
+    new Date(props.memory.eventDate),
+  ),
 );
 
 const createdInfo = computed(() =>
-  new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(props.memory.updatedAt))
+  new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeStyle: "short" }).format(
+    new Date(props.memory.updatedAt),
+  ),
 );
 
 const toneLabel = computed(() => {
@@ -73,7 +74,5 @@ const toneLabel = computed(() => {
   }
 });
 
-const previewMedia = computed(() => props.memory.media.slice(0, 3));</script>
-
-
-
+const previewMedia = computed(() => props.memory.media.slice(0, 3));
+</script>

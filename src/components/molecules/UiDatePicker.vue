@@ -14,7 +14,7 @@
         <div class="flex flex-col gap-2">
           <button
             type="button"
-            class="flex w-full items-center justify-between rounded-2xl border border-outline/40 bg-surface-muted/70 px-4 py-3 text-left text-sm text-content transition hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            class="flex w-full items-center justify-between rounded-2xl border border-outline border-opacity-40 bg-surface-muted/70 px-4 py-3 text-left text-sm text-content transition hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-30"
             @click="togglePopover()"
           >
             <span class="flex flex-col">

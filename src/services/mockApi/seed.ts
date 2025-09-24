@@ -52,39 +52,6 @@ export const seedTasks = [
   }
 ];
 
-export const seedRecipes = [
-  {
-    id: "r-001",
-    title: "银杏核桃燕麦碗",
-    description: "富含 Omega-3 与抗氧化成分的活力早餐。",
-    tags: ["早餐", "脑健康"],
-    prepTime: 10,
-    cookTime: 5,
-    difficulty: "easy",
-    heroImage: "/media/r-001.jpg",
-    ingredients: [
-      { name: "燕麦片", quantity: 50, unit: "g" },
-      { name: "核桃", quantity: 20, unit: "g" },
-      { name: "银杏果", quantity: 10, unit: "颗" }
-    ],
-    steps: ["燕麦片加热牛奶煮三分钟", "加入处理好的银杏果和核桃", "撒上蓝莓与蜂蜜即可"],
-    nutrition: {
-      calories: 360,
-      protein: 12,
-      fat: 14,
-      carbs: 46,
-      vitamins: {
-        b12: 0.4,
-        e: 2.3,
-        omega3: 1.5,
-        antioxidants: 420
-      }
-    },
-    pairings: ["黑咖啡", "柠檬水"],
-    isBookmarked: true
-  }
-];
-
 export const seedNews = [
   {
     id: "n-001",
@@ -117,3 +84,4 @@ export const seedProfile = {
   },
   followedTopics: ["认知训练", "营养补充", "音乐疗法"]
 };
+

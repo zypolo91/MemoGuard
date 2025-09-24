@@ -21,7 +21,7 @@
                 type="text"
                 required
                 placeholder="例如：与妈妈一起泡温泉的夜晚"
-                class="w-full rounded-2xl border border-outline/40 bg-surface-muted/70 px-4 py-3 text-base text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                class="w-full rounded-2xl border border-outline border-opacity-40 bg-surface-muted/70 px-4 py-3 text-base text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-30"
               />
             </div>
 
@@ -35,7 +35,7 @@
                 <div class="relative">
                   <select
                     v-model="form.mood"
-                    class="w-full appearance-none rounded-2xl border border-outline/40 bg-surface-muted/70 px-4 py-3 text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    class="w-full appearance-none rounded-2xl border border-outline border-opacity-40 bg-surface-muted/70 px-4 py-3 text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-30"
                   >
                     <option value="">请选择</option>
                     <option value="温馨">温馨</option>
@@ -55,7 +55,7 @@
                 v-model.trim="form.location"
                 type="text"
                 placeholder="例如：箱根 · 温泉旅馆"
-                class="w-full rounded-2xl border border-outline/40 bg-surface-muted/70 px-4 py-3 text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                class="w-full rounded-2xl border border-outline border-opacity-40 bg-surface-muted/70 px-4 py-3 text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-30"
               />
             </div>
 
@@ -83,7 +83,7 @@
                 v-model="contentInput"
                 rows="6"
                 placeholder="记录当时的对话、环境、感受或想法……"
-                class="w-full rounded-2xl border border-outline/40 bg-surface-muted/70 px-4 py-3 text-sm leading-relaxed text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                class="w-full rounded-2xl border border-outline border-opacity-40 bg-surface-muted/70 px-4 py-3 text-sm leading-relaxed text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-30"
               />
             </div>
 
@@ -105,7 +105,7 @@
                   v-model.trim="linkInput"
                   type="url"
                   placeholder="粘贴网页或云端链接"
-                  class="flex-1 rounded-2xl border border-outline/40 bg-surface-muted/70 px-4 py-2 text-sm text-content focus:border-primary focus:outline-none"
+                  class="flex-1 rounded-2xl border border-outline border-opacity-40 bg-surface-muted/70 px-4 py-2 text-sm text-content focus:border-primary focus:outline-none"
                 />
                 <button type="button" class="rounded-full border border-primary px-4 py-2 text-sm text-primary" @click="addLink">添加</button>
               </div>
@@ -124,7 +124,7 @@
                       <component :is="mediaIcon(item.type)" class="h-6 w-6" />
                     </div>
                     <div class="space-y-1 text-xs text-content/70">
-                      <p class="font-medium text-content">{{ item.name ?? formatMediaName(item) }}</p>
+                      <p class="max-w-[220px] break-words text-sm font-medium text-content">{{ item.name ?? formatMediaName(item) }}</p>
                       <a v-if="isLink(item)" :href="item.url" target="_blank" rel="noopener" class="text-primary underline underline-offset-2">打开链接</a>
                     </div>
                   </div>
@@ -144,7 +144,7 @@
           <div
             class="flex flex-wrap items-center gap-3 border-t border-outline/30 bg-surface px-6 pt-4 pb-[calc(env(safe-area-inset-bottom)+16px)]"
           >
-            <button type="button" class="flex-1 rounded-full border border-outline/40 px-4 py-3 text-sm text-content/70" @click="emit('close')">
+            <button type="button" class="flex-1 rounded-full border border-outline border-opacity-40 px-4 py-3 text-sm text-content/70" @click="emit('close')">
               取消
             </button>
             <button type="submit" class="primary-button flex-1 justify-center" :disabled="isSubmitDisabled">
@@ -379,6 +379,7 @@ function createId() {
   opacity: 0;
 }
 </style>
+
 
 
 
