@@ -130,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/vue/24/outline";
 
 import UiCard from "@/components/atoms/UiCard.vue";
@@ -149,6 +149,14 @@ const metricLabels: Record<AssessmentMetric, string> = {
 
 const store = usePatientStore();
 
+onMounted(() => {
+  if (store.assessmentsState === "idle") {
+    store.fetchAssessments();
+  }
+  if (store.profileState === "idle") {
+    store.fetchProfile();
+  }
+});
 const assessments = computed(() => store.assessments);
 
 const timelineTemplateId = ref<string>("all");
@@ -253,30 +261,40 @@ function closeWorkspace() {
   workspace.mode = "create";
 }
 
-function handleWorkspaceSubmit(payload: { id?: string; data: AssessmentPayload }) {
+async function handleWorkspaceSubmit(payload: { id?: string; data: AssessmentPayload }) {
   const { id, data } = payload;
-  if (id) {
-    store.updateAssessment(id, data);
-    showFeedback("评估记录已更新", "success");
-  } else {
-    store.addAssessment(data);
-    showFeedback("新的评估记录已保存", "success");
+  try {
+    if (id) {
+      await store.updateAssessment(id, data);
+      showFeedback("评估记录已更新", "success");
+    } else {
+      await store.addAssessment(data);
+      showFeedback("新的评估记录已保存", "success");
+    }
+    closeWorkspace();
+  } catch (error) {
+    console.error(error);
+    showFeedback("保存失败，请稍后重试", "warning");
   }
-  closeWorkspace();
 }
 
-function handleWorkspaceDelete(id: string) {
-  requestDelete(id);
+async function handleWorkspaceDelete(id: string) {
+  await requestDelete(id);
 }
 
-function requestDelete(id: string) {
+async function requestDelete(id: string) {
   const confirmed = typeof window !== "undefined" ? window.confirm("确定要删除该评估记录吗？") : true;
   if (!confirmed) return;
-  store.removeAssessment(id);
-  if (workspace.assessmentId === id) {
-    closeWorkspace();
+  try {
+    await store.removeAssessment(id);
+    if (workspace.assessmentId === id) {
+      closeWorkspace();
+    }
+    showFeedback("评估记录已删除", "warning");
+  } catch (error) {
+    console.error(error);
+    showFeedback("删除失败，请稍后重试", "warning");
   }
-  showFeedback("评估记录已删除", "warning");
 }
 
 function showFeedback(message: string, tone: "success" | "warning" | "info") {
@@ -320,3 +338,9 @@ function formatDate(value: string) {
   @apply rounded-full border border-outline border-opacity-40 bg-surface-muted px-3 py-1 text-xs text-content focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-30;
 }
 </style>
+
+
+
+
+
+

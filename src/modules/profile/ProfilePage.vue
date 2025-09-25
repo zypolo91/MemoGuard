@@ -53,6 +53,8 @@ onMounted(() => {
   if (profileStore.state === "idle") profileStore.fetchProfile();
   if (memoriesStore.state === "idle") memoriesStore.fetchMemories();
   if (tasksStore.state === "idle") tasksStore.fetchTasks();
+  if (patientStore.profileState === "idle") patientStore.fetchProfile();
+  if (patientStore.assessmentsState === "idle") patientStore.fetchAssessments();
 });
 
 const profile = computed(() => profileStore.profile);
@@ -111,3 +113,4 @@ function retry() {
   profileStore.fetchProfile();
 }
 </script>
+

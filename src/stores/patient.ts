@@ -1,7 +1,15 @@
-﻿import { computed, ref, watch } from "vue";
+﻿import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 
-import { loadState, saveState } from "@/utils/storage";
+import {
+  createPatientAssessment,
+  deletePatientAssessment,
+  getPatientProfile,
+  listPatientAssessments,
+  updatePatientAssessment,
+  updatePatientProfile,
+  type PatientAssessmentPayload
+} from "@/services/mockApi/patient";
 
 export interface PatientProfile {
   id: string;
@@ -76,9 +84,6 @@ export const assessmentTemplates: AssessmentTemplate[] = [
     description: "淀粉样蛋白 PET 影像",
   },
 ];
-
-const PROFILE_STORAGE_KEY = "patient:profile";
-const ASSESSMENTS_STORAGE_KEY = "patient:assessments";
 
 function uid(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
@@ -190,118 +195,110 @@ function normalizeAssessment(raw: any): PatientAssessment {
   };
 }
 
-const defaultProfile: PatientProfile = {
-  id: "patient-001",
-  name: "李慧敏",
-  gender: "女",
-  age: 72,
-  birthDate: "1953-04-18",
-  diagnosisDate: "2023-06-12",
-  caregiver: "张伟（家属）",
-  contactPhone: "138-0000-1234",
-  address: "上海市浦东新区",
-  medications: ["多奈哌齐 5mg 每日一次", "褪黑素 2mg 睡前服用"],
-  notes: "夜间偶有迷路，与家属共同进行记忆训练。",
+type AssessmentCreateInput = {
+  date: string;
+  templateId: string;
+  value: number | null;
+  unit?: string;
+  status: string;
+  notes?: string;
+  label?: string;
+  metric?: AssessmentMetric;
 };
 
-const defaultAssessmentSeed = [
-  {
-    date: "2023-03-18",
-    templateId: "cognitive-moca",
-    value: 20,
-    status: "轻度认知下降",
-    notes: "执行功能稍弱，建议继续训练。",
-  },
-  {
-    date: "2023-09-22",
-    templateId: "pet-amyloid",
-    value: 1.42,
-    unit: "SUVR",
-    status: "淀粉样蛋白明显沉积",
-    notes: "顶叶与颞叶摄取增高。",
-  },
-  {
-    date: "2024-03-05",
-    templateId: "cognitive-moca",
-    value: 18.5,
-    status: "持续下降需干预",
-    notes: "注意力波动，建议增加日间活动。",
-  },
-  {
-    date: "2024-08-30",
-    templateId: "pet-tau",
-    value: 1.28,
-    unit: "SUVR",
-    status: "海马区 tau 聚集增加",
-    notes: "左侧海马强化明显。",
-  },
-];
+type AssessmentUpdateInput = Partial<AssessmentCreateInput>;
 
-const defaultAssessments: PatientAssessment[] = defaultAssessmentSeed
-  .map((item) => normalizeAssessment(item))
-  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+function toApiPayload(source: AssessmentCreateInput & { id?: string }): PatientAssessmentPayload {
+  const normalized = normalizeAssessment(source);
+  return {
+    date: normalized.date,
+    templateId: normalized.templateId,
+    label: normalized.label,
+    metric: normalized.metric,
+    value: normalized.value,
+    unit: normalized.unit,
+    status: normalized.status,
+    notes: normalized.notes,
+  };
+}
 
 export const usePatientStore = defineStore("patient", () => {
-  const storedProfile = loadState<PatientProfile>(PROFILE_STORAGE_KEY, defaultProfile);
-  const profile = ref<PatientProfile>(storedProfile);
+  const profile = ref<PatientProfile | null>(null);
+  const profileState = ref<"idle" | "loading" | "success" | "error">("idle");
+  const profileError = ref<string | null>(null);
 
-  const storedAssessments = loadState<PatientAssessment[]>(
-    ASSESSMENTS_STORAGE_KEY,
-    defaultAssessments,
-  );
-  const assessments = ref<PatientAssessment[]>(
-    Array.isArray(storedAssessments)
-      ? storedAssessments.map((item) => normalizeAssessment(item))
-      : [],
-  );
+  const assessments = ref<PatientAssessment[]>([]);
+  const assessmentsState = ref<"idle" | "loading" | "success" | "error">("idle");
+  const assessmentsError = ref<string | null>(null);
 
   const orderedAssessments = computed(() =>
-    [...assessments.value].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+    [...assessments.value].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   );
 
-  function updateProfile(updates: Partial<PatientProfile>) {
-    profile.value = { ...profile.value, ...updates };
+  async function fetchProfile() {
+    profileState.value = "loading";
+    profileError.value = null;
+    try {
+      profile.value = await getPatientProfile();
+      profileState.value = "success";
+    } catch (error) {
+      profileError.value = error instanceof Error ? error.message : String(error);
+      profileState.value = profile.value ? "success" : "error";
+    }
   }
 
-  function addAssessment(
-    entry: Omit<PatientAssessment, "id" | "label" | "metric"> & {
-      templateId: string;
-      label?: string;
-      metric?: AssessmentMetric;
-    },
-  ): string {
-    const normalized = normalizeAssessment(entry);
+  async function updateProfile(updates: Partial<PatientProfile>) {
+    const updated = await updatePatientProfile(updates);
+    profile.value = updated;
+    return updated;
+  }
+
+  async function fetchAssessments() {
+    assessmentsState.value = "loading";
+    assessmentsError.value = null;
+    try {
+      const remote = await listPatientAssessments();
+      assessments.value = remote.map((item) => normalizeAssessment(item));
+      assessmentsState.value = "success";
+    } catch (error) {
+      assessmentsError.value = error instanceof Error ? error.message : String(error);
+      assessmentsState.value = assessments.value.length ? "success" : "error";
+    }
+  }
+
+  async function addAssessment(entry: AssessmentCreateInput): Promise<string> {
+    const payload = toApiPayload(entry);
+    const created = await createPatientAssessment(payload);
+    const normalized = normalizeAssessment(created);
     assessments.value = [...assessments.value, normalized];
     return normalized.id;
   }
 
-  function updateAssessment(id: string, updates: Partial<PatientAssessment>) {
-    assessments.value = assessments.value.map((assessment) => {
-      if (assessment.id !== id) return assessment;
-      return normalizeAssessment({ ...assessment, ...updates, id });
-    });
+  async function updateAssessment(id: string, updates: AssessmentUpdateInput) {
+    const existing = assessments.value.find((item) => item.id === id);
+    if (!existing) return;
+    const payload = toApiPayload({ ...existing, ...updates });
+    const updated = await updatePatientAssessment(id, payload);
+    const normalized = normalizeAssessment(updated);
+    assessments.value = assessments.value.map((item) => (item.id === id ? normalized : item));
   }
 
-  function removeAssessment(id: string) {
-    assessments.value = assessments.value.filter((assessment) => assessment.id !== id);
+  async function removeAssessment(id: string) {
+    const removed = await deletePatientAssessment(id);
+    if (!removed) return;
+    assessments.value = assessments.value.filter((item) => item.id !== id);
   }
-
-  watch(profile, (value) => saveState(PROFILE_STORAGE_KEY, value), { deep: true });
-
-  watch(
-    assessments,
-    (value) =>
-      saveState(
-        ASSESSMENTS_STORAGE_KEY,
-        [...value].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
-      ),
-    { deep: true },
-  );
 
   return {
     profile,
+    profileState,
+    profileError,
     assessments: orderedAssessments,
+    assessmentsState,
+    assessmentsError,
+    fetchProfile,
     updateProfile,
+    fetchAssessments,
     addAssessment,
     updateAssessment,
     removeAssessment,

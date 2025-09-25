@@ -85,3 +85,64 @@ export const seedProfile = {
   followedTopics: ["认知训练", "营养补充", "音乐疗法"]
 };
 
+export const seedPatientProfile = {
+  id: "patient-001",
+  name: "李慧敏",
+  gender: "女",
+  age: 72,
+  birthDate: "1953-04-18",
+  diagnosisDate: "2023-06-12",
+  caregiver: "张伟（家属）",
+  contactPhone: "138-0000-1234",
+  address: "上海市浦东新区",
+  medications: ["多奈哌齐 5mg 每日一次", "褪黑素 2mg 睡前服用"],
+  notes: "夜间偶有迷路，与家属共同进行记忆训练。"
+};
+
+export const seedPatientAssessments = [
+  {
+    id: "assess-20230318",
+    date: "2023-03-18",
+    templateId: "cognitive-moca",
+    label: "MoCA",
+    metric: "score",
+    value: 20,
+    unit: "分",
+    status: "轻度认知下降",
+    notes: "执行功能稍弱，建议继续训练。"
+  },
+  {
+    id: "assess-20230922",
+    date: "2023-09-22",
+    templateId: "pet-amyloid",
+    label: "Amyloid PET",
+    metric: "amyloid",
+    value: 1.42,
+    unit: "SUVR",
+    status: "淀粉样蛋白明显沉积",
+    notes: "顶叶与颞叶摄取增高。"
+  },
+  {
+    id: "assess-20240305",
+    date: "2024-03-05",
+    templateId: "cognitive-moca",
+    label: "MoCA",
+    metric: "score",
+    value: 18.5,
+    unit: "分",
+    status: "持续下降需干预",
+    notes: "注意力波动，建议增加日间活动。"
+  },
+  {
+    id: "assess-20240830",
+    date: "2024-08-30",
+    templateId: "pet-tau",
+    label: "PET Tau",
+    metric: "tau",
+    value: 1.28,
+    unit: "SUVR",
+    status: "海马区 tau 聚集增加",
+    notes: "左侧海马强化明显。"
+  }
+];
+
