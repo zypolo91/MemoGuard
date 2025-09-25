@@ -1,37 +1,37 @@
-ï»¿# MemoGuard æŠ€æœ¯è®¾è®¡æ–‡æ¡£
+# MemoGuard ¼¼ÊõÉè¼ÆÎÄµµ
 
-## 1. æ¶æ„æ¦‚è§ˆ
-- ä½¿ç”¨ Vue 3 + TypeScript æ„å»ºå•é¡µåº”ç”¨ï¼Œå€ŸåŠ© Vite å®Œæˆå¿«é€Ÿå¼€å‘ä¸ä¼˜åŒ–åçš„ç”Ÿäº§æ„å»ºã€‚
-- é‡‡ç”¨ç»„ä»¶é©±åŠ¨ä¸åŸå­åŒ–è®¾è®¡åŸåˆ™ï¼šåŸå­ï¼ˆæŒ‰é’®ã€è¾“å…¥æ¡†ï¼‰ã€åˆ†å­ï¼ˆåª’ä½“å¡ç‰‡ã€æ—¶é—´è½´é¡¹ï¼‰ã€æœ‰æœºä½“ï¼ˆæ¨¡å—é¢æ¿ï¼‰åŠé¡µé¢æ¨¡æ¿ã€‚
-- ä½¿ç”¨ Pinia ç®¡ç†å…¨å±€çŠ¶æ€ï¼Œå„åŠŸèƒ½æ¨¡å—ç‹¬ç«‹ Storeï¼›Vue Router è´Ÿè´£äº”å¤§æ¨¡å—çš„å¯¼èˆªã€‚
-- æ„å»ºæ¨¡æ‹ŸæœåŠ¡å±‚æŠ½è±¡æ•°æ®è®¿é—®ï¼Œåç»­å¯è½»æ¾æ›¿æ¢ä¸ºçœŸå® APIï¼›æ¨¡æ‹ŸæŒä¹…åŒ–ä¾èµ–æµè§ˆå™¨ LocalStorageï¼Œå¹¶åœ¨å¼‚å¸¸æ—¶ä¼˜é›…é™çº§ã€‚
-- æ ·å¼å±‚ä½¿ç”¨ Tailwind CSS æ­é…è‡ªå®šä¹‰è®¾è®¡ä»¤ç‰Œï¼Œå®ç°ç°ä»£ä¸”æ˜“äºè¿­ä»£çš„æ— éšœç¢ç•Œé¢ã€‚
+## 1. ¼Ü¹¹¸ÅÀÀ
+- Ê¹ÓÃ Vue 3 + TypeScript ¹¹½¨µ¥Ò³Ó¦ÓÃ£¬½èÖú Vite Íê³É¿ìËÙ¿ª·¢ÓëÓÅ»¯ºóµÄÉú²ú¹¹½¨¡£
+- ²ÉÓÃ×é¼şÇı¶¯ÓëÔ­×Ó»¯Éè¼ÆÔ­Ôò£ºÔ­×Ó£¨°´Å¥¡¢ÊäÈë¿ò£©¡¢·Ö×Ó£¨Ã½Ìå¿¨Æ¬¡¢Ê±¼äÖáÏî£©¡¢ÓĞ»úÌå£¨Ä£¿éÃæ°å£©¼°Ò³ÃæÄ£°å¡£
+- Ê¹ÓÃ Pinia ¹ÜÀíÈ«¾Ö×´Ì¬£¬¸÷¹¦ÄÜÄ£¿é¶ÀÁ¢ Store£»Vue Router ¸ºÔğÎå´óÄ£¿éµÄµ¼º½¡£
+- ¹¹½¨Ä£Äâ·şÎñ²ã³éÏóÊı¾İ·ÃÎÊ£¬ºóĞø¿ÉÇáËÉÌæ»»ÎªÕæÊµ API£»Ä£Äâ³Ö¾Ã»¯ÒÀÀµä¯ÀÀÆ÷ LocalStorage£¬²¢ÔÚÒì³£Ê±ÓÅÑÅ½µ¼¶¡£
+- ÑùÊ½²ãÊ¹ÓÃ Tailwind CSS ´îÅä×Ô¶¨ÒåÉè¼ÆÁîÅÆ£¬ÊµÏÖÏÖ´úÇÒÒ×ÓÚµü´úµÄÎŞÕÏ°­½çÃæ¡£
 
-## 2. æŠ€æœ¯æ ˆ
-- è¯­è¨€ï¼šTypeScript 5.xï¼Œæä¾›é™æ€ç±»å‹ä¸ IDE æ”¯æŒã€‚
-- æ¡†æ¶ï¼šVue 3 Composition APIï¼Œå¯é€‰é›†æˆ VueUse å·¥å…·åº“ã€‚
-- æ„å»ºå·¥å…·ï¼šVite + esbuildï¼Œç”¨äºå¿«é€Ÿçƒ­æ›´æ–°ä¸ç”Ÿäº§æ‰“åŒ…ã€‚
-- çŠ¶æ€ç®¡ç†ï¼šPinia æ­é… LocalStorage æŒä¹…åŒ–æ’ä»¶ã€‚
-- è·¯ç”±ï¼šVue Router 4ï¼Œæ”¯æŒåŸºäºè·¯ç”±çš„ä»£ç åˆ†ç‰‡ã€‚
-- UI å·¥å…·ï¼šTailwind CSSã€Headless UIã€Heroiconsï¼Œæä¾›å¯è®¿é—®çš„åŸºç¡€ç»„ä»¶ã€‚
-- æµ‹è¯•ï¼šVitest + Vue Test Utils åšå•å…ƒå’Œç»„ä»¶æµ‹è¯•ï¼ŒPlaywright è¦†ç›–ç«¯åˆ°ç«¯å†’çƒŸåœºæ™¯ã€‚
-- å·¥å…·é“¾ï¼šESLintï¼ˆVue + TypeScript è§„åˆ™ï¼‰ã€Prettier è‡ªåŠ¨æ ¼å¼åŒ–ï¼Œå¯é€‰ Stylelint çº¦æŸ Tailwind ç”¨æ³•ã€‚
+## 2. ¼¼ÊõÕ»
+- ÓïÑÔ£ºTypeScript 5.x£¬Ìá¹©¾²Ì¬ÀàĞÍÓë IDE Ö§³Ö¡£
+- ¿ò¼Ü£ºVue 3 Composition API£¬¿ÉÑ¡¼¯³É VueUse ¹¤¾ß¿â¡£
+- ¹¹½¨¹¤¾ß£ºVite + esbuild£¬ÓÃÓÚ¿ìËÙÈÈ¸üĞÂÓëÉú²ú´ò°ü¡£
+- ×´Ì¬¹ÜÀí£ºPinia ´îÅä LocalStorage ³Ö¾Ã»¯²å¼ş¡£
+- Â·ÓÉ£ºVue Router 4£¬Ö§³Ö»ùÓÚÂ·ÓÉµÄ´úÂë·ÖÆ¬¡£
+- UI ¹¤¾ß£ºTailwind CSS¡¢Headless UI¡¢Heroicons£¬Ìá¹©¿É·ÃÎÊµÄ»ù´¡×é¼ş¡£
+- ²âÊÔ£ºVitest + Vue Test Utils ×öµ¥ÔªºÍ×é¼ş²âÊÔ£¬Playwright ¸²¸Ç¶Ëµ½¶ËÃ°ÑÌ³¡¾°¡£
+- ¹¤¾ßÁ´£ºESLint£¨Vue + TypeScript ¹æÔò£©¡¢Prettier ×Ô¶¯¸ñÊ½»¯£¬¿ÉÑ¡ Stylelint Ô¼Êø Tailwind ÓÃ·¨¡£
 
-## 3. åº”ç”¨ç»“æ„
+## 3. Ó¦ÓÃ½á¹¹
 ```
-src/
-  main.ts             // åº”ç”¨å¯åŠ¨ï¼Œæ³¨å…¥è·¯ç”±ã€Piniaã€å…¨å±€æ ·å¼
-  App.vue             // å…¨å±€å¸ƒå±€å¤–å£³ï¼ˆé¡µå¤´ã€ä¾§æ ã€é€šçŸ¥ï¼‰
+app/
+  main.ts             // Ó¦ÓÃÆô¶¯£¬×¢ÈëÂ·ÓÉ¡¢Pinia¡¢È«¾ÖÑùÊ½
+  App.vue             // È«¾Ö²¼¾ÖÍâ¿Ç£¨Ò³Í·¡¢²àÀ¸¡¢Í¨Öª£©
   router/
-    index.ts          // è·¯ç”±å®šä¹‰ä¸æ‡’åŠ è½½è§†å›¾
+    index.ts          // Â·ÓÉ¶¨ÒåÓëÀÁ¼ÓÔØÊÓÍ¼
   stores/
-    memories.ts       // æŒ‰æ¨¡å—åˆ’åˆ†çš„ Pinia Store
+    memories.ts       // °´Ä£¿é»®·ÖµÄ Pinia Store
     tasks.ts
     recipes.ts
     news.ts
     profile.ts
   modules/
-    memories/         // åŠŸèƒ½æ¨¡å—ç»„ä»¶ä¸ç»„åˆå¼å‡½æ•°
+    memories/         // ¹¦ÄÜÄ£¿é×é¼şÓë×éºÏÊ½º¯Êı
     tasks/
     diet/
     insights/
@@ -47,105 +47,105 @@ src/
       recipes.ts
       news.ts
       profile.ts
-    scheduler.ts      // æé†’å®šæ—¶ä»»åŠ¡ä¸é€šçŸ¥é’©å­
+    scheduler.ts      // ÌáĞÑ¶¨Ê±ÈÎÎñÓëÍ¨Öª¹³×Ó
   assets/
     styles/
       tailwind.css
       tokens.css
 mock/
-  seed.json           // å¯é€‰é™æ€åˆå§‹æ•°æ®
+  seed.json           // ¿ÉÑ¡¾²Ì¬³õÊ¼Êı¾İ
 ```
 
-## 4. æ¨¡å—è®¾è®¡
-### 4.1 è®°å¿†æ¨¡å—
-- æ ¸å¿ƒç»„ä»¶ï¼š`MemoryTimeline.vue`ã€`MemoryCard.vue`ã€`MemoryComposer.vue`ã€`MemoryDetailDrawer.vue`ã€`AnnotationPanel.vue`ã€‚
-- æ•°æ®ç»“æ„ï¼š`id`ã€`title`ã€`content`ã€`media[] { id, type, url, thumbnail, transcript }`ã€`createdAt`ã€`eventDate`ã€`people[]`ã€`tags[]`ã€`mood`ã€`location`ã€`annotations[] { id, type, targetId, timestamp, body, createdBy }`ã€‚
-- ä¸»è¦æµç¨‹ï¼šæ—¶é—´è½´æ— é™æ»šåŠ¨ï¼›ä½¿ç”¨å¯Œæ–‡æœ¬ç¼–è¾‘å™¨ï¼ˆå¦‚ TipTapï¼‰è¿›è¡Œåˆ›å»ºä¸ç¼–è¾‘ï¼›æ‰¹æ³¨æ¨¡å¼æä¾›ä¸Šä¸‹æ–‡è¯„è®ºï¼›åˆ é™¤æ“ä½œéœ€ç¡®è®¤ã€‚
-- ç¼“å­˜ç­–ç•¥ï¼šåœ¨ Pinia ä¸­ä¿å­˜ä¸Šæ¬¡æŸ¥çœ‹çš„è®°å¿†ï¼Œå¹¶å°†å¿«ç…§å†™å…¥ LocalStorage ä»¥æå‡ç¦»çº¿ä½“éªŒã€‚
+## 4. Ä£¿éÉè¼Æ
+### 4.1 ¼ÇÒäÄ£¿é
+- ºËĞÄ×é¼ş£º`MemoryTimeline.vue`¡¢`MemoryCard.vue`¡¢`MemoryComposer.vue`¡¢`MemoryDetailDrawer.vue`¡¢`AnnotationPanel.vue`¡£
+- Êı¾İ½á¹¹£º`id`¡¢`title`¡¢`content`¡¢`media[] { id, type, url, thumbnail, transcript }`¡¢`createdAt`¡¢`eventDate`¡¢`people[]`¡¢`tags[]`¡¢`mood`¡¢`location`¡¢`annotations[] { id, type, targetId, timestamp, body, createdBy }`¡£
+- Ö÷ÒªÁ÷³Ì£ºÊ±¼äÖáÎŞÏŞ¹ö¶¯£»Ê¹ÓÃ¸»ÎÄ±¾±à¼­Æ÷£¨Èç TipTap£©½øĞĞ´´½¨Óë±à¼­£»Åú×¢Ä£Ê½Ìá¹©ÉÏÏÂÎÄÆÀÂÛ£»É¾³ı²Ù×÷ĞèÈ·ÈÏ¡£
+- »º´æ²ßÂÔ£ºÔÚ Pinia ÖĞ±£´æÉÏ´Î²é¿´µÄ¼ÇÒä£¬²¢½«¿ìÕÕĞ´Èë LocalStorage ÒÔÌáÉıÀëÏßÌåÑé¡£
 
-### 4.2 äº‹åŠ¡æ¨¡å—
-- ç»„ä»¶ï¼š`TaskDashboard.vue`ã€`TaskFormDrawer.vue`ã€`TaskList.vue`ã€`TaskCalendarStrip.vue`ã€`ReminderLog.vue`ã€‚
-- æ•°æ®ç»“æ„ï¼š`id`ã€`title`ã€`category`ã€`frequency`ï¼ˆæšä¸¾åŠ è‡ªå®šä¹‰è§„åˆ™ï¼‰ã€`startAt`ã€`endAt`ã€`priority`ã€`reminderLead`ã€`reminderChannel[]`ã€`notes`ã€`statusHistory[] { status, timestamp }`ã€‚
-- è°ƒåº¦æœåŠ¡åˆ©ç”¨ç±» Cron è¾…åŠ©å‡½æ•°è®¡ç®—ä¸‹æ¬¡è§¦å‘æ—¶é—´ï¼Œç»“åˆ `setTimeout` ä¸ `setInterval`ï¼›é˜Ÿåˆ—ä¿¡æ¯æŒä¹…åŒ–äº LocalStorageï¼Œåˆ·æ–°åæ¢å¤ã€‚
-- é€šçŸ¥ç•Œé¢ï¼šå…¨å±€ Toast ç®¡ç†å™¨é…åˆæ¸ é“å›¾æ ‡ï¼Œå¯é€‰æ¨¡æ€æé†’åˆ°æœŸäº‹åŠ¡ã€‚
+### 4.2 ÊÂÎñÄ£¿é
+- ×é¼ş£º`TaskDashboard.vue`¡¢`TaskFormDrawer.vue`¡¢`TaskList.vue`¡¢`TaskCalendarStrip.vue`¡¢`ReminderLog.vue`¡£
+- Êı¾İ½á¹¹£º`id`¡¢`title`¡¢`category`¡¢`frequency`£¨Ã¶¾Ù¼Ó×Ô¶¨Òå¹æÔò£©¡¢`startAt`¡¢`endAt`¡¢`priority`¡¢`reminderLead`¡¢`reminderChannel[]`¡¢`notes`¡¢`statusHistory[] { status, timestamp }`¡£
+- µ÷¶È·şÎñÀûÓÃÀà Cron ¸¨Öúº¯Êı¼ÆËãÏÂ´Î´¥·¢Ê±¼ä£¬½áºÏ `setTimeout` Óë `setInterval`£»¶ÓÁĞĞÅÏ¢³Ö¾Ã»¯ÓÚ LocalStorage£¬Ë¢ĞÂºó»Ö¸´¡£
+- Í¨Öª½çÃæ£ºÈ«¾Ö Toast ¹ÜÀíÆ÷ÅäºÏÇşµÀÍ¼±ê£¬¿ÉÑ¡Ä£Ì¬ÌáĞÑµ½ÆÚÊÂÎñ¡£
 
-### 4.3 é¥®é£Ÿæ¨¡å—
-- ç»„ä»¶ï¼š`RecipeGrid.vue`ã€`RecipeCard.vue`ã€`RecipeDetail.vue`ã€`RecipeEditor.vue`ã€`NutritionFacts.vue`ã€`RecommendationCarousel.vue`ã€‚
-- æ•°æ®ç»“æ„ï¼š`id`ã€`title`ã€`description`ã€`tags[]`ã€`prepTime`ã€`cookTime`ã€`difficulty`ã€`heroImage`ã€`ingredients[] { name, quantity, unit }`ã€`steps[]`ã€`nutrition { calories, protein, fat, carbs, vitamins: { b12, e, omega3, antioxidants } }`ã€`pairings[]`ã€`isBookmarked`ã€‚
-- æ¨èå¼•æ“ï¼šç»„åˆå¼å‡½æ•° `useRecipeRecommendations` æ ¹æ®æ”¶è—ã€æµè§ˆæ ‡ç­¾ä¸æ—¶é—´æ®µæ‰“åˆ†ï¼Œç”Ÿæˆè½®æ’­å†…å®¹ã€‚
+### 4.3 ÒûÊ³Ä£¿é
+- ×é¼ş£º`RecipeGrid.vue`¡¢`RecipeCard.vue`¡¢`RecipeDetail.vue`¡¢`RecipeEditor.vue`¡¢`NutritionFacts.vue`¡¢`RecommendationCarousel.vue`¡£
+- Êı¾İ½á¹¹£º`id`¡¢`title`¡¢`description`¡¢`tags[]`¡¢`prepTime`¡¢`cookTime`¡¢`difficulty`¡¢`heroImage`¡¢`ingredients[] { name, quantity, unit }`¡¢`steps[]`¡¢`nutrition { calories, protein, fat, carbs, vitamins: { b12, e, omega3, antioxidants } }`¡¢`pairings[]`¡¢`isBookmarked`¡£
+- ÍÆ¼öÒıÇæ£º×éºÏÊ½º¯Êı `useRecipeRecommendations` ¸ù¾İÊÕ²Ø¡¢ä¯ÀÀ±êÇ©ÓëÊ±¼ä¶Î´ò·Ö£¬Éú³ÉÂÖ²¥ÄÚÈİ¡£
 
-### 4.4 èµ„è®¯æ¨¡å—
-- ç»„ä»¶ï¼š`InsightsFeed.vue`ã€`ArticleCard.vue`ã€`ArticleDetailDrawer.vue`ã€`HighlightPanel.vue`ã€`FollowChips.vue`ã€‚
-- æ•°æ®ç»“æ„ï¼š`id`ã€`title`ã€`summary`ã€`content`ã€`source`ã€`category`ã€`publishedAt`ã€`url`ã€`highlights[]`ã€`isFavorite`ã€`isFollowed`ã€‚
-- ä½¿ç”¨ `useNewsFilters` ç»„åˆå¼å‡½æ•°ç®¡ç†æœç´¢è¯ã€ç±»åˆ«ä¸æ—¥æœŸï¼Œæ¯ä¸ªåˆ—è¡¨æ”¯æŒè™šæ‹Ÿæ»šåŠ¨ï¼ˆå¦‚ Vue Virtual Scroll Listï¼‰ã€‚
+### 4.4 ×ÊÑ¶Ä£¿é
+- ×é¼ş£º`InsightsFeed.vue`¡¢`ArticleCard.vue`¡¢`ArticleDetailDrawer.vue`¡¢`HighlightPanel.vue`¡¢`FollowChips.vue`¡£
+- Êı¾İ½á¹¹£º`id`¡¢`title`¡¢`summary`¡¢`content`¡¢`source`¡¢`category`¡¢`publishedAt`¡¢`url`¡¢`highlights[]`¡¢`isFavorite`¡¢`isFollowed`¡£
+- Ê¹ÓÃ `useNewsFilters` ×éºÏÊ½º¯Êı¹ÜÀíËÑË÷´Ê¡¢Àà±ğÓëÈÕÆÚ£¬Ã¿¸öÁĞ±íÖ§³ÖĞéÄâ¹ö¶¯£¨Èç Vue Virtual Scroll List£©¡£
 
-### 4.5 æˆ‘çš„æ¨¡å—
-- ç»„ä»¶ï¼š`ProfileOverview.vue`ã€`ActivityTimeline.vue`ã€`CollectionsTabs.vue`ã€`SettingsPanel.vue`ã€`AnalyticsWidget.vue`ã€‚
-- æ•°æ®ç»“æ„ï¼š`id`ã€`name`ã€`avatar`ã€`role`ã€`stats { memoriesCreated, tasksCompleted, recipesSaved, articlesHighlighted }`ã€`preferences { theme, reminderChannels, digestFrequency }`ã€`activity[] { id, type, refId, description, timestamp }`ã€‚
-- é€šè¿‡è®¡ç®—å±æ€§èšåˆå…¶ä»– Store æ•°æ®ï¼Œå¹¶ç¼“å­˜æ´¾ç”Ÿç»Ÿè®¡ä»¥ä¿æŒä»ªè¡¨ç›˜æ€§èƒ½ã€‚
+### 4.5 ÎÒµÄÄ£¿é
+- ×é¼ş£º`ProfileOverview.vue`¡¢`ActivityTimeline.vue`¡¢`CollectionsTabs.vue`¡¢`SettingsPanel.vue`¡¢`AnalyticsWidget.vue`¡£
+- Êı¾İ½á¹¹£º`id`¡¢`name`¡¢`avatar`¡¢`role`¡¢`stats { memoriesCreated, tasksCompleted, recipesSaved, articlesHighlighted }`¡¢`preferences { theme, reminderChannels, digestFrequency }`¡¢`activity[] { id, type, refId, description, timestamp }`¡£
+- Í¨¹ı¼ÆËãÊôĞÔ¾ÛºÏÆäËû Store Êı¾İ£¬²¢»º´æÅÉÉúÍ³¼ÆÒÔ±£³ÖÒÇ±íÅÌĞÔÄÜ¡£
 
-## 5. æ•°æ®æ¨¡å‹ä¸æ ¡éªŒ
-- åœ¨ `src/types/` ä¸­å®šä¹‰ TypeScript æ¥å£ï¼›é€šè¿‡ Zod å¯¹æ¨¡æ‹Ÿè¯·æ±‚å“åº”ä¸è¡¨å•æäº¤åšè¿è¡Œæ—¶æ ¡éªŒã€‚
-- æšä¸¾å¸¸é‡æ”¾å…¥ `src/constants/`ï¼ˆç±»åˆ«ã€ä¼˜å…ˆçº§ã€é¢‘ç‡æ¨¡å¼ï¼‰ï¼Œä»¥é©±åŠ¨ä¸‹æ‹‰é€‰é¡¹å¹¶é¿å…æ‹¼å†™é”™è¯¯ã€‚
-- ä½¿ç”¨ `crypto.randomUUID()` ç”Ÿæˆ IDï¼Œè‹¥ç¯å¢ƒä¸æ”¯æŒåˆ™å›é€€åˆ°è‡ªå¢è®¡æ•°ä»¥å…¼å®¹ SSRã€‚
+## 5. Êı¾İÄ£ĞÍÓëĞ£Ñé
+- ÔÚ `app/types/` ÖĞ¶¨Òå TypeScript ½Ó¿Ú£»Í¨¹ı Zod ¶ÔÄ£ÄâÇëÇóÏìÓ¦Óë±íµ¥Ìá½»×öÔËĞĞÊ±Ğ£Ñé¡£
+- Ã¶¾Ù³£Á¿·ÅÈë `app/constants/`£¨Àà±ğ¡¢ÓÅÏÈ¼¶¡¢ÆµÂÊÄ£Ê½£©£¬ÒÔÇı¶¯ÏÂÀ­Ñ¡Ïî²¢±ÜÃâÆ´Ğ´´íÎó¡£
+- Ê¹ÓÃ `crypto.randomUUID()` Éú³É ID£¬Èô»·¾³²»Ö§³ÖÔò»ØÍËµ½×ÔÔö¼ÆÊıÒÔ¼æÈİ SSR¡£
 
-## 6. æ¨¡æ‹ŸæœåŠ¡å±‚
-- æ¯ä¸ªæ¨¡å—çš„æœåŠ¡æ–‡ä»¶å¯¼å‡º CRUD æ–¹æ³•ï¼Œè¿”å›å¸¦æœ‰ 100 è‡³ 400 æ¯«ç§’äººå·¥å»¶è¿Ÿçš„ `Promise<T>` ä»¥æ¨¡æ‹Ÿç½‘ç»œã€‚
-- `mockApi/index.ts` æš´éœ²ç±»å‹åŒ–çš„ç«¯ç‚¹ï¼›æœªæ¥æ›¿æ¢çœŸå® API æ—¶ä»…éœ€è°ƒæ•´å®ç°ã€‚
-- æŒä¹…åŒ–æµç¨‹ï¼š
-  1. é¦–å…ˆä» LocalStorage å‘½åç©ºé—´ï¼ˆä¾‹å¦‚ `memoGuard.memories`ï¼‰è¯»å–ã€‚
-  2. è‹¥ä¸å­˜åœ¨ï¼Œåˆ™ä½¿ç”¨ `mock/seed.json` ä½œä¸ºåˆå§‹æ•°æ®ã€‚
-  3. æ•°æ®ä¿®æ”¹åå†™å› LocalStorageï¼Œå¹¶åŒæ­¥ Pinia Store çŠ¶æ€ã€‚
-- æä¾› `resetMockData()` å·¥å…·ï¼Œæ–¹ä¾¿è°ƒè¯•ä¸æµ‹è¯•ã€‚
+## 6. Ä£Äâ·şÎñ²ã
+- Ã¿¸öÄ£¿éµÄ·şÎñÎÄ¼şµ¼³ö CRUD ·½·¨£¬·µ»Ø´øÓĞ 100 ÖÁ 400 ºÁÃëÈË¹¤ÑÓ³ÙµÄ `Promise<T>` ÒÔÄ£ÄâÍøÂç¡£
+- `mockApi/index.ts` ±©Â¶ÀàĞÍ»¯µÄ¶Ëµã£»Î´À´Ìæ»»ÕæÊµ API Ê±½öĞèµ÷ÕûÊµÏÖ¡£
+- ³Ö¾Ã»¯Á÷³Ì£º
+  1. Ê×ÏÈ´Ó LocalStorage ÃüÃû¿Õ¼ä£¨ÀıÈç `memoGuard.memories`£©¶ÁÈ¡¡£
+  2. Èô²»´æÔÚ£¬ÔòÊ¹ÓÃ `mock/seed.json` ×÷Îª³õÊ¼Êı¾İ¡£
+  3. Êı¾İĞŞ¸ÄºóĞ´»Ø LocalStorage£¬²¢Í¬²½ Pinia Store ×´Ì¬¡£
+- Ìá¹© `resetMockData()` ¹¤¾ß£¬·½±ãµ÷ÊÔÓë²âÊÔ¡£
 
-## 7. çŠ¶æ€ç®¡ç†ä¸ç¼“å­˜
-- Store å…±äº« `BaseEntityStore` ç»„åˆå¼å‡½æ•°ï¼Œæä¾›åŠ è½½æ€ã€é”™è¯¯å¤„ç†ä¸ä¹è§‚æ›´æ–°èƒ½åŠ›ã€‚
-- å€ŸåŠ© `pinia-plugin-persistedstate` æˆ–è‡ªç ”æ–¹æ¡ˆå°†é€‰å®šçŠ¶æ€åˆ‡ç‰‡åŒæ­¥åˆ° LocalStorageã€‚
-- ä½¿ç”¨ç»„åˆå¼ API æ„å»ºæ´¾ç”Ÿé€‰æ‹©å™¨ï¼ˆå¦‚ `useTimelineGroups`ã€`useDueTasks`ï¼‰ï¼Œä¿æŒç»„ä»¶è½»é‡ã€‚
+## 7. ×´Ì¬¹ÜÀíÓë»º´æ
+- Store ¹²Ïí `BaseEntityStore` ×éºÏÊ½º¯Êı£¬Ìá¹©¼ÓÔØÌ¬¡¢´íÎó´¦ÀíÓëÀÖ¹Û¸üĞÂÄÜÁ¦¡£
+- ½èÖú `pinia-plugin-persistedstate` »ò×ÔÑĞ·½°¸½«Ñ¡¶¨×´Ì¬ÇĞÆ¬Í¬²½µ½ LocalStorage¡£
+- Ê¹ÓÃ×éºÏÊ½ API ¹¹½¨ÅÉÉúÑ¡ÔñÆ÷£¨Èç `useTimelineGroups`¡¢`useDueTasks`£©£¬±£³Ö×é¼şÇáÁ¿¡£
 
-## 8. è·¯ç”±ä¸å¯¼èˆª
-- è·¯ç”±æ˜ å°„ï¼š`/memories`ï¼ˆé»˜è®¤æ—¶é—´è½´ï¼‰ã€`/memories/:id`ã€`/tasks`ã€`/diet`ã€`/insights`ã€`/profile`ã€‚
-- é€šè¿‡åŠ¨æ€å¯¼å…¥å®ç°è§†å›¾æ‡’åŠ è½½ï¼Œå¹¶ä½¿ç”¨ Vite Chunk æç¤ºï¼ˆä¾‹å¦‚ `/* webpackChunkName: "memories" */`ï¼‰ã€‚
-- å¯¼èˆªå®ˆå«ç¡®ä¿è¿›å…¥è·¯ç”±å‰å·²å®Œæˆæ¨¡æ‹Ÿæ•°æ®æ³¨å…¥ã€‚
+## 8. Â·ÓÉÓëµ¼º½
+- Â·ÓÉÓ³Éä£º`/memories`£¨Ä¬ÈÏÊ±¼äÖá£©¡¢`/memories/:id`¡¢`/tasks`¡¢`/diet`¡¢`/insights`¡¢`/profile`¡£
+- Í¨¹ı¶¯Ì¬µ¼ÈëÊµÏÖÊÓÍ¼ÀÁ¼ÓÔØ£¬²¢Ê¹ÓÃ Vite Chunk ÌáÊ¾£¨ÀıÈç `/* webpackChunkName: "memories" */`£©¡£
+- µ¼º½ÊØÎÀÈ·±£½øÈëÂ·ÓÉÇ°ÒÑÍê³ÉÄ£ÄâÊı¾İ×¢Èë¡£
 
-## 9. UI æ ·å¼ä¸ä¸»é¢˜
-- Tailwind é…ç½®å®šä¹‰è‰²æ¿ï¼ˆå¹³é™çš„è“ç´«ä¸æš–è‰²ç‚¹ç¼€ï¼‰ã€å­—ä½“ï¼ˆå¦‚ Inter åŠç³»ç»Ÿå¤‡é€‰ï¼‰ã€‚
-- ä½¿ç”¨ CSS å˜é‡ç®¡ç†é—´è·ã€åœ†è§’ã€é˜´å½±ï¼Œæ”¯æŒä¸»é¢˜åˆ‡æ¢ã€‚
-- é’ˆå¯¹ `prefers-reduced-motion` åª’ä½“æŸ¥è¯¢å‡å°‘åŠ¨ç”»ï¼Œä»¥ç…§é¡¾æ•æ„Ÿç”¨æˆ·ã€‚
-- å€ŸåŠ© `@tailwindcss/typography` æ¸²æŸ“è®°å¿†ä¸èµ„è®¯ä¸­çš„å¯Œæ–‡æœ¬å†…å®¹ã€‚
+## 9. UI ÑùÊ½ÓëÖ÷Ìâ
+- Tailwind ÅäÖÃ¶¨ÒåÉ«°å£¨Æ½¾²µÄÀ¶×ÏÓëÅ¯É«µã×º£©¡¢×ÖÌå£¨Èç Inter ¼°ÏµÍ³±¸Ñ¡£©¡£
+- Ê¹ÓÃ CSS ±äÁ¿¹ÜÀí¼ä¾à¡¢Ô²½Ç¡¢ÒõÓ°£¬Ö§³ÖÖ÷ÌâÇĞ»»¡£
+- Õë¶Ô `prefers-reduced-motion` Ã½Ìå²éÑ¯¼õÉÙ¶¯»­£¬ÒÔÕÕ¹ËÃô¸ĞÓÃ»§¡£
+- ½èÖú `@tailwindcss/typography` äÖÈ¾¼ÇÒäÓë×ÊÑ¶ÖĞµÄ¸»ÎÄ±¾ÄÚÈİ¡£
 
-## 10. é€šçŸ¥ä¸è°ƒåº¦
-- æé†’è°ƒåº¦å™¨åœ¨ Pinia ä¸­ç»´æŠ¤é˜Ÿåˆ—ï¼Œä»»åŠ¡åˆ›å»ºæˆ–æ›´æ–°æ—¶æ³¨å†Œä¸‹ä¸€æ¬¡è§¦å‘ã€‚
-- é¦–é€‰ Web Notifications APIï¼Œè‹¥ç”¨æˆ·æœªæˆæƒåˆ™å›é€€åˆ°åº”ç”¨å†… Toast ä¸é«˜äº®äº‹åŠ¡å¡ç‰‡ã€‚
-- å…¨å±€ç»„åˆå¼å‡½æ•° `useNotificationCenter` ç»Ÿä¸€æƒé™ç”³è¯·ä¸é€šçŸ¥è°ƒç”¨ã€‚
-- MVP é˜¶æ®µé™åˆ¶å¹¶å‘å®šæ—¶å™¨æ•°é‡ï¼Œå¹¶åœ¨ç»„ä»¶å¸è½½æˆ–é¡µé¢éšè—æ—¶æ¸…ç†å®šæ—¶å™¨ã€‚
+## 10. Í¨ÖªÓëµ÷¶È
+- ÌáĞÑµ÷¶ÈÆ÷ÔÚ Pinia ÖĞÎ¬»¤¶ÓÁĞ£¬ÈÎÎñ´´½¨»ò¸üĞÂÊ±×¢²áÏÂÒ»´Î´¥·¢¡£
+- Ê×Ñ¡ Web Notifications API£¬ÈôÓÃ»§Î´ÊÚÈ¨Ôò»ØÍËµ½Ó¦ÓÃÄÚ Toast Óë¸ßÁÁÊÂÎñ¿¨Æ¬¡£
+- È«¾Ö×éºÏÊ½º¯Êı `useNotificationCenter` Í³Ò»È¨ÏŞÉêÇëÓëÍ¨Öªµ÷ÓÃ¡£
+- MVP ½×¶ÎÏŞÖÆ²¢·¢¶¨Ê±Æ÷ÊıÁ¿£¬²¢ÔÚ×é¼şĞ¶ÔØ»òÒ³ÃæÒş²ØÊ±ÇåÀí¶¨Ê±Æ÷¡£
 
-## 11. å¯è®¿é—®æ€§ä¸å›½é™…åŒ–
-- ä½¿ç”¨è¯­ä¹‰åŒ– HTML ä¸ ARIA è§’è‰²ï¼Œè¦†ç›–æ—¶é—´è½´ã€è½®æ’­ã€é€‰é¡¹å¡ç­‰äº¤äº’ã€‚
-- å…¨éƒ¨äº¤äº’å…ƒç´ æ”¯æŒé”®ç›˜å¯¼èˆªï¼ˆæ¨¡æ€æ¡†å†…ç„¦ç‚¹é”å®šã€è·³è½¬é“¾æ¥ï¼‰ã€‚
-- å¼•å…¥ Vue I18n ç®¡ç†æ–‡æ¡ˆï¼Œå³ä¾¿ä»…æœ‰å•ä¸€è¯­è¨€ä¹Ÿä¸ºåç»­ç¿»è¯‘åšå‡†å¤‡ã€‚
-- ä¸ºåª’ä½“é™„ä»¶æä¾›æ›¿ä»£æ–‡æœ¬ï¼Œä¸ºéŸ³è§†é¢‘æ·»åŠ å­—å¹•ï¼Œå¹¶æ”¯æŒåŠ¨æ€å­—ä½“ç¼©æ”¾ã€‚
+## 11. ¿É·ÃÎÊĞÔÓë¹ú¼Ê»¯
+- Ê¹ÓÃÓïÒå»¯ HTML Óë ARIA ½ÇÉ«£¬¸²¸ÇÊ±¼äÖá¡¢ÂÖ²¥¡¢Ñ¡Ïî¿¨µÈ½»»¥¡£
+- È«²¿½»»¥ÔªËØÖ§³Ö¼üÅÌµ¼º½£¨Ä£Ì¬¿òÄÚ½¹µãËø¶¨¡¢Ìø×ªÁ´½Ó£©¡£
+- ÒıÈë Vue I18n ¹ÜÀíÎÄ°¸£¬¼´±ã½öÓĞµ¥Ò»ÓïÑÔÒ²ÎªºóĞø·­Òë×ö×¼±¸¡£
+- ÎªÃ½Ìå¸½¼şÌá¹©Ìæ´úÎÄ±¾£¬ÎªÒôÊÓÆµÌí¼Ó×ÖÄ»£¬²¢Ö§³Ö¶¯Ì¬×ÖÌåËõ·Å¡£
 
-## 12. æµ‹è¯•ç­–ç•¥
-- å•å…ƒæµ‹è¯•ï¼šæ•°æ®æ¨¡å‹æ ¡éªŒã€Store è¡Œä¸ºï¼ˆåŠ¨ä½œä¸å˜æ›´ï¼‰ã€å·¥å…·å‡½æ•°ã€‚
-- ç»„ä»¶æµ‹è¯•ï¼šæ—¶é—´è½´æ¸²æŸ“ã€äº‹åŠ¡è¡¨å•æ ¡éªŒã€é€šçŸ¥è§¦å‘ã€èœè°±æ¨èé€»è¾‘ã€‚
-- ç«¯åˆ°ç«¯å†’çƒŸï¼šåˆ›å»ºã€ç¼–è¾‘ã€åˆ é™¤è®°å¿†ï¼›å®‰æ’äº‹åŠ¡å¹¶è§‚å¯Ÿæé†’ï¼›æ”¶è—èœè°±ï¼›é«˜äº®èµ„è®¯ã€‚
-- æµ‹è¯•æœŸé—´ä½¿ç”¨ Mock Service Workerï¼ˆMSWï¼‰æ‹¦æˆªè¯·æ±‚ï¼Œç¡®ä¿æ•°æ®ä¸€è‡´ã€‚
-- å¯é€‰ GitHub Actions æµæ°´çº¿æ‰§è¡Œ `pnpm lint`ã€`pnpm test`ã€`pnpm build`ã€‚
+## 12. ²âÊÔ²ßÂÔ
+- µ¥Ôª²âÊÔ£ºÊı¾İÄ£ĞÍĞ£Ñé¡¢Store ĞĞÎª£¨¶¯×÷Óë±ä¸ü£©¡¢¹¤¾ßº¯Êı¡£
+- ×é¼ş²âÊÔ£ºÊ±¼äÖáäÖÈ¾¡¢ÊÂÎñ±íµ¥Ğ£Ñé¡¢Í¨Öª´¥·¢¡¢²ËÆ×ÍÆ¼öÂß¼­¡£
+- ¶Ëµ½¶ËÃ°ÑÌ£º´´½¨¡¢±à¼­¡¢É¾³ı¼ÇÒä£»°²ÅÅÊÂÎñ²¢¹Û²ìÌáĞÑ£»ÊÕ²Ø²ËÆ×£»¸ßÁÁ×ÊÑ¶¡£
+- ²âÊÔÆÚ¼äÊ¹ÓÃ Mock Service Worker£¨MSW£©À¹½ØÇëÇó£¬È·±£Êı¾İÒ»ÖÂ¡£
+- ¿ÉÑ¡ GitHub Actions Á÷Ë®ÏßÖ´ĞĞ `pnpm lint`¡¢`pnpm test`¡¢`pnpm build`¡£
 
-## 13. æ„å»ºã€éƒ¨ç½²ä¸å·¥å…·
-- åŒ…ç®¡ç†å™¨æ¨èä½¿ç”¨ pnpmï¼Œä¿è¯å·¥ä½œåŒºç®¡ç†ä¸é”å®šä¸€è‡´æ€§ã€‚
-- é€šè¿‡ `.env` ç®¡ç†ç¯å¢ƒå˜é‡ï¼ˆå¦‚ `VITE_APP_NAME`ï¼‰ï¼Œå¹¶æä¾› `env.d.ts` ç±»å‹å£°æ˜ã€‚
-- Vite æ„å»ºè¾“å‡ºé™æ€èµ„æºåˆ° `dist/`ï¼Œå¯éƒ¨ç½²äº Netlifyã€Vercel æˆ–ä»»æ„é™æ€æ‰˜ç®¡æœåŠ¡ã€‚
-- é…ç½® ESLint ä¸ Prettier çš„é¢„æäº¤é’©å­ï¼ˆHusky åŠ  lint-stagedï¼‰ä»¥ä¿æŒæ ¼å¼ä¸€è‡´ã€‚
+## 13. ¹¹½¨¡¢²¿ÊğÓë¹¤¾ß
+- °ü¹ÜÀíÆ÷ÍÆ¼öÊ¹ÓÃ pnpm£¬±£Ö¤¹¤×÷Çø¹ÜÀíÓëËø¶¨Ò»ÖÂĞÔ¡£
+- Í¨¹ı `.env` ¹ÜÀí»·¾³±äÁ¿£¨Èç `VITE_APP_NAME`£©£¬²¢Ìá¹© `env.d.ts` ÀàĞÍÉùÃ÷¡£
+- Vite ¹¹½¨Êä³ö¾²Ì¬×ÊÔ´µ½ `dist/`£¬¿É²¿ÊğÓÚ Netlify¡¢Vercel »òÈÎÒâ¾²Ì¬ÍĞ¹Ü·şÎñ¡£
+- ÅäÖÃ ESLint Óë Prettier µÄÔ¤Ìá½»¹³×Ó£¨Husky ¼Ó lint-staged£©ÒÔ±£³Ö¸ñÊ½Ò»ÖÂ¡£
 
-## 14. å¯è§‚æµ‹æ€§ä¸åˆ†æï¼ˆæ¨¡æ‹Ÿï¼‰
-- å®ç°è½»é‡çº§åˆ†ææœåŠ¡ï¼Œå°†äº‹ä»¶å†™å…¥å†…å­˜é˜Ÿåˆ—å¹¶é•œåƒè‡³ LocalStorageï¼Œä¾›â€œæˆ‘çš„â€æ¨¡å—ä»ªè¡¨ç›˜è¯»å–ã€‚
-- æä¾›å¼€å‘è€…å¼€å…³ä»¥æŸ¥çœ‹åˆ†æè½½è·ï¼Œä¾¿äºæ¼”ç¤ºã€‚
+## 14. ¿É¹Û²âĞÔÓë·ÖÎö£¨Ä£Äâ£©
+- ÊµÏÖÇáÁ¿¼¶·ÖÎö·şÎñ£¬½«ÊÂ¼şĞ´ÈëÄÚ´æ¶ÓÁĞ²¢¾µÏñÖÁ LocalStorage£¬¹©¡°ÎÒµÄ¡±Ä£¿éÒÇ±íÅÌ¶ÁÈ¡¡£
+- Ìá¹©¿ª·¢Õß¿ª¹ØÒÔ²é¿´·ÖÎöÔØºÉ£¬±ãÓÚÑİÊ¾¡£
 
-## 15. åç»­å¢å¼º
-- å°†æ¨¡æ‹ŸæœåŠ¡æ›¿æ¢ä¸ºçœŸå®åç«¯ï¼ˆå¦‚ NestJS æˆ– Express æ­é… PostgreSQLï¼‰ï¼Œå¹¶æ¥å…¥ç”¨æˆ·èº«ä»½è®¤è¯ã€‚
-- å¼•å…¥åä½œç©ºé—´ä¸åŸºäºè§’è‰²çš„æƒé™æ§åˆ¶ã€‚
-- æ•´åˆå¯ç©¿æˆ´è®¾å¤‡æˆ–æ—¥å†æ•°æ®ï¼Œæä¾›æ›´æ™ºèƒ½çš„æé†’ã€‚
-- å‡çº§è°ƒåº¦å™¨ä¸º Service Worker åŠ  IndexedDBï¼Œä»¥æå‡åå°æé†’å¯é æ€§ã€‚
-- å¼•å…¥äººå·¥æ™ºèƒ½è¾…åŠ©çš„èµ„è®¯æ‘˜è¦ä¸é¥®é£Ÿä¸ªæ€§åŒ–æ¨èã€‚
+## 15. ºóĞøÔöÇ¿
+- ½«Ä£Äâ·şÎñÌæ»»ÎªÕæÊµºó¶Ë£¨Èç NestJS »ò Express ´îÅä PostgreSQL£©£¬²¢½ÓÈëÓÃ»§Éí·İÈÏÖ¤¡£
+- ÒıÈëĞ­×÷¿Õ¼äÓë»ùÓÚ½ÇÉ«µÄÈ¨ÏŞ¿ØÖÆ¡£
+- ÕûºÏ¿É´©´÷Éè±¸»òÈÕÀúÊı¾İ£¬Ìá¹©¸üÖÇÄÜµÄÌáĞÑ¡£
+- Éı¼¶µ÷¶ÈÆ÷Îª Service Worker ¼Ó IndexedDB£¬ÒÔÌáÉıºóÌ¨ÌáĞÑ¿É¿¿ĞÔ¡£
+- ÒıÈëÈË¹¤ÖÇÄÜ¸¨ÖúµÄ×ÊÑ¶ÕªÒªÓëÒûÊ³¸öĞÔ»¯ÍÆ¼ö¡£

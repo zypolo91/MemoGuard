@@ -1,54 +1,54 @@
-ï»¿# MemoGuard åç«¯é›†æˆéœ€æ±‚ä¸æŠ€æœ¯æ–¹æ¡ˆ
+# MemoGuard ºó¶Ë¼¯³ÉĞèÇóÓë¼¼Êõ·½°¸
 
-## 1. èƒŒæ™¯ä¸ç›®æ ‡
-- å‰ç«¯ï¼ˆVue 3 + Pinia + Viteï¼‰å·²å…·å¤‡è®°å¿†å¡ç‰‡ã€ç…§æŠ¤ä»»åŠ¡ã€è¥å…»è¯„ä¼°ã€èµ„è®¯ä»¥åŠç…§æŠ¤è€…æ¡£æ¡ˆç­‰æ¨¡å—ï¼Œå½“å‰æ•°æ®æ¥æºä¸º `src/services/mockApi` ä¸‹çš„æœ¬åœ°å‡æ•°æ®ã€‚
-- ç›®æ ‡æ˜¯åœ¨ä¿æŒç°æœ‰å‰ç«¯äº¤äº’çš„å‰æä¸‹ï¼Œæä¾›ä¸€å¥—åŸºäº **Next.js (App Router)** + **shadcn/ui** + **Drizzle ORM** çš„åç«¯å®ç°è§„èŒƒï¼Œä¾¿äºåç«¯è½åœ°ä¸å‰ç«¯å¯¹æ¥ã€‚
-- æœ¬æ–‡æ¡£åŒæ­¥ç»™å‡ºäº† Mock API çš„å¥‘çº¦ï¼Œå‰ç«¯å·²æŒ‰è¯¥å¥‘çº¦è¿›è¡Œäº†æ”¹é€ ï¼Œåç«¯åªéœ€éµå¾ªå³å¯æ— ç¼å¯¹æ¥ã€‚
+## 1. ±³¾°ÓëÄ¿±ê
+- Ç°¶Ë£¨Vue 3 + Pinia + Vite£©ÒÑ¾ß±¸¼ÇÒä¿¨Æ¬¡¢ÕÕ»¤ÈÎÎñ¡¢ÓªÑøÆÀ¹À¡¢×ÊÑ¶ÒÔ¼°ÕÕ»¤Õßµµ°¸µÈÄ£¿é£¬µ±Ç°Êı¾İÀ´Ô´Îª `app/services/mockApi` ÏÂµÄ±¾µØ¼ÙÊı¾İ¡£
+- Ä¿±êÊÇÔÚ±£³ÖÏÖÓĞÇ°¶Ë½»»¥µÄÇ°ÌáÏÂ£¬Ìá¹©Ò»Ì×»ùÓÚ **Next.js (App Router)** + **shadcn/ui** + **Drizzle ORM** µÄºó¶ËÊµÏÖ¹æ·¶£¬±ãÓÚºó¶ËÂäµØÓëÇ°¶Ë¶Ô½Ó¡£
+- ±¾ÎÄµµÍ¬²½¸ø³öÁË Mock API µÄÆõÔ¼£¬Ç°¶ËÒÑ°´¸ÃÆõÔ¼½øĞĞÁË¸ÄÔì£¬ºó¶ËÖ»Ğè×ñÑ­¼´¿ÉÎŞ·ì¶Ô½Ó¡£
 
-## 2. ä¸šåŠ¡åŸŸä¸æ ¸å¿ƒæ•°æ®æ¨¡å‹
-| æ¨¡å— | ä¸»è¦å®ä½“ | å…³é”®å­—æ®µ | è¯´æ˜ |
+## 2. ÒµÎñÓòÓëºËĞÄÊı¾İÄ£ĞÍ
+| Ä£¿é | Ö÷ÒªÊµÌå | ¹Ø¼ü×Ö¶Î | ËµÃ÷ |
 | --- | --- | --- | --- |
-| è®°å¿†å®ˆæŠ¤ (`/memories`) | `Memory`ã€`MemoryMedia`ã€`MemoryAnnotation`ã€`MemoryInsight` | æ ‡é¢˜ã€å¯Œæ–‡æœ¬å†…å®¹ã€åª’ä½“èµ„æºã€æ ‡ç­¾ã€æƒ…ç»ªã€æ™ºèƒ½æ‘˜è¦ã€å…³é”®è¯ | æ”¯æŒæ—¶é—´çº¿ä¸æ ‡ç­¾è§†å›¾ï¼Œåç«¯éœ€è¦æä¾›å¢åˆ æ”¹æŸ¥æ¥å£åŠåª’ä½“å…ƒæ•°æ®å¤„ç† |
-| ç…§æŠ¤ä»»åŠ¡ (`/tasks`) | `CareTask`ã€`TaskHistory`/`ReminderLog` | ä»»åŠ¡é¢‘æ¬¡ã€ä¼˜å…ˆçº§ã€æé†’å†å²ã€çŠ¶æ€æµè½¬ | éœ€è¦æ”¯æŒä»»åŠ¡çš„ CRUD ä»¥åŠæé†’å†å²çš„å¢åˆ æ”¹ |
-| è¥å…» / è¯„ä¼° (`/nutrition`) | `PatientProfile`ã€`PatientAssessment`ã€`AssessmentTemplate` | äººå‘˜åŸºç¡€ä¿¡æ¯ã€è¯„ä¼°æ¨¡æ¿ã€è¯„ä¼°è®°å½•ã€æ•°å€¼å•ä½ | è¯„ä¼°è®°å½•è¦æŒ‰æ—¥æœŸæ’åºï¼Œæ”¯æŒåˆ›å»ºã€ç¼–è¾‘ã€åˆ é™¤ |
-| èµ„è®¯æ´å¯Ÿ (`/insights`) | `InsightArticle` | æ ‡é¢˜ã€æ¥æºã€æ‘˜è¦ã€æ ‡ç­¾ã€æ”¶è—çŠ¶æ€ | åªè¯»åˆ—è¡¨ï¼Œæ”¯æŒæ”¶è—çŠ¶æ€åˆ‡æ¢ |
-| ç…§æŠ¤è€…æ¡£æ¡ˆ (`/profile`) | `CareProfile`ã€`ProfilePreferences` | å¤´åƒã€ streakã€å…³æ³¨ä¸»é¢˜ã€é€šçŸ¥åå¥½ | è¯»å– + æ›´æ–°åå¥½ |
+| ¼ÇÒäÊØ»¤ (`/memories`) | `Memory`¡¢`MemoryMedia`¡¢`MemoryAnnotation`¡¢`MemoryInsight` | ±êÌâ¡¢¸»ÎÄ±¾ÄÚÈİ¡¢Ã½Ìå×ÊÔ´¡¢±êÇ©¡¢ÇéĞ÷¡¢ÖÇÄÜÕªÒª¡¢¹Ø¼ü´Ê | Ö§³ÖÊ±¼äÏßÓë±êÇ©ÊÓÍ¼£¬ºó¶ËĞèÒªÌá¹©ÔöÉ¾¸Ä²é½Ó¿Ú¼°Ã½ÌåÔªÊı¾İ´¦Àí |
+| ÕÕ»¤ÈÎÎñ (`/tasks`) | `CareTask`¡¢`TaskHistory`/`ReminderLog` | ÈÎÎñÆµ´Î¡¢ÓÅÏÈ¼¶¡¢ÌáĞÑÀúÊ·¡¢×´Ì¬Á÷×ª | ĞèÒªÖ§³ÖÈÎÎñµÄ CRUD ÒÔ¼°ÌáĞÑÀúÊ·µÄÔöÉ¾¸Ä |
+| ÓªÑø / ÆÀ¹À (`/nutrition`) | `PatientProfile`¡¢`PatientAssessment`¡¢`AssessmentTemplate` | ÈËÔ±»ù´¡ĞÅÏ¢¡¢ÆÀ¹ÀÄ£°å¡¢ÆÀ¹À¼ÇÂ¼¡¢ÊıÖµµ¥Î» | ÆÀ¹À¼ÇÂ¼Òª°´ÈÕÆÚÅÅĞò£¬Ö§³Ö´´½¨¡¢±à¼­¡¢É¾³ı |
+| ×ÊÑ¶¶´²ì (`/insights`) | `InsightArticle` | ±êÌâ¡¢À´Ô´¡¢ÕªÒª¡¢±êÇ©¡¢ÊÕ²Ø×´Ì¬ | Ö»¶ÁÁĞ±í£¬Ö§³ÖÊÕ²Ø×´Ì¬ÇĞ»» |
+| ÕÕ»¤Õßµµ°¸ (`/profile`) | `CareProfile`¡¢`ProfilePreferences` | Í·Ïñ¡¢ streak¡¢¹Ø×¢Ö÷Ìâ¡¢Í¨ÖªÆ«ºÃ | ¶ÁÈ¡ + ¸üĞÂÆ«ºÃ |
 
-> è¯„ä¼°æ¨¡æ¿(`assessmentTemplates`) åœ¨å‰ç«¯ä¸ºå¸¸é‡ï¼Œåç«¯å¯æä¾›é…ç½®åŒ–æ¥å£ï¼ˆå¯é€‰ï¼‰ä»¥ä¾¿è¿è¥ç®¡ç†ã€‚
+> ÆÀ¹ÀÄ£°å(`assessmentTemplates`) ÔÚÇ°¶ËÎª³£Á¿£¬ºó¶Ë¿ÉÌá¹©ÅäÖÃ»¯½Ó¿Ú£¨¿ÉÑ¡£©ÒÔ±ãÔËÓª¹ÜÀí¡£
 
-## 3. REST API è®¾è®¡
-ä»¥ä¸‹æ¥å£å»ºè®®ä½¿ç”¨ `/api` å‰ç¼€ï¼Œå‡è¿”å› `application/json`ï¼Œé‡‡ç”¨ 200/201/204 è¯­ä¹‰åŒ–çŠ¶æ€ç ï¼Œé”™è¯¯ç»Ÿä¸€è¿”å› `{ error: { code, message } }`ã€‚
+## 3. REST API Éè¼Æ
+ÒÔÏÂ½Ó¿Ú½¨ÒéÊ¹ÓÃ `/api` Ç°×º£¬¾ù·µ»Ø `application/json`£¬²ÉÓÃ 200/201/204 ÓïÒå»¯×´Ì¬Âë£¬´íÎóÍ³Ò»·µ»Ø `{ error: { code, message } }`¡£
 
-### 3.1 è®°å¿†å®ˆæŠ¤
+### 3.1 ¼ÇÒäÊØ»¤
 - `GET /api/memories`
-  - æŸ¥è¯¢å‚æ•°ï¼š`tag?`, `from?`, `to?`
-  - å“åº”ï¼š`Memory[]`
+  - ²éÑ¯²ÎÊı£º`tag?`, `from?`, `to?`
+  - ÏìÓ¦£º`Memory[]`
 - `POST /api/memories`
-  - è¯·æ±‚ä½“ï¼š`{ title, content, richText?, eventDate, mood?, tags[], media[], location?, people[] }`
-  - å“åº”ï¼š`Memory`
+  - ÇëÇóÌå£º`{ title, content, richText?, eventDate, mood?, tags[], media[], location?, people[] }`
+  - ÏìÓ¦£º`Memory`
 - `PATCH /api/memories/:id`
-  - éƒ¨åˆ†æ›´æ–°ï¼ˆæ ‡é¢˜ã€å†…å®¹ã€æ ‡ç­¾ã€åª’ä½“ã€æ‘˜è¦ç­‰ï¼‰
+  - ²¿·Ö¸üĞÂ£¨±êÌâ¡¢ÄÚÈİ¡¢±êÇ©¡¢Ã½Ìå¡¢ÕªÒªµÈ£©
 - `DELETE /api/memories/:id`
-- åª’ä½“ä¸Šä¼ å¯èµ° `POST /api/uploads`ï¼Œè¿”å› `{ url, thumbnail? }` åå›å¡«åˆ° `media`
+- Ã½ÌåÉÏ´«¿É×ß `POST /api/uploads`£¬·µ»Ø `{ url, thumbnail? }` ºó»ØÌîµ½ `media`
 
-### 3.2 ç…§æŠ¤ä»»åŠ¡
+### 3.2 ÕÕ»¤ÈÎÎñ
 - `GET /api/tasks`
-  - å“åº”ï¼š`CareTask[]`
+  - ÏìÓ¦£º`CareTask[]`
 - `POST /api/tasks`
 - `PATCH /api/tasks/:id`
 - `DELETE /api/tasks/:id`
 - `POST /api/tasks/:id/reminders`
-  - è¯·æ±‚ä½“ï¼š`{ status, timestamp }`
-  - å“åº”ï¼šæ›´æ–°åçš„ `CareTask`
+  - ÇëÇóÌå£º`{ status, timestamp }`
+  - ÏìÓ¦£º¸üĞÂºóµÄ `CareTask`
 - `PATCH /api/tasks/:id/reminders/:timestamp`
 - `DELETE /api/tasks/:id/reminders/:timestamp`
 
-### 3.3 æ‚£è€…è¯„ä¼° / è¥å…»
+### 3.3 »¼ÕßÆÀ¹À / ÓªÑø
 - `GET /api/patient/profile`
 - `PATCH /api/patient/profile`
 - `GET /api/patient/assessments`
 - `POST /api/patient/assessments`
-  - è¯·æ±‚ä½“å¥‘çº¦ï¼ˆä¸å‰ç«¯ Mock ä¿æŒä¸€è‡´ï¼‰ï¼š
+  - ÇëÇóÌåÆõÔ¼£¨ÓëÇ°¶Ë Mock ±£³ÖÒ»ÖÂ£©£º
     ```json
     {
       "date": "2024-08-30",
@@ -57,26 +57,26 @@
       "metric": "tau",
       "value": 1.28,
       "unit": "SUVR",
-      "status": "æµ·é©¬åŒº tau èšé›†å¢åŠ ",
-      "notes": "å·¦ä¾§æµ·é©¬å¼ºåŒ–æ˜æ˜¾ã€‚"
+      "status": "º£ÂíÇø tau ¾Û¼¯Ôö¼Ó",
+      "notes": "×ó²àº£ÂíÇ¿»¯Ã÷ÏÔ¡£"
     }
     ```
 - `PATCH /api/patient/assessments/:id`
 - `DELETE /api/patient/assessments/:id`
 
-### 3.4 èµ„è®¯ä¸æ”¶è—
+### 3.4 ×ÊÑ¶ÓëÊÕ²Ø
 - `GET /api/news`
-  - æ”¯æŒ `topic?`ã€`bookmark?` è¿‡æ»¤
+  - Ö§³Ö `topic?`¡¢`bookmark?` ¹ıÂË
 - `POST /api/news/:id/bookmark`
-  - è¯·æ±‚ä½“ï¼š`{ isBookmarked: boolean }`
+  - ÇëÇóÌå£º`{ isBookmarked: boolean }`
 
-### 3.5 ç…§æŠ¤è€…æ¡£æ¡ˆ
+### 3.5 ÕÕ»¤Õßµµ°¸
 - `GET /api/caregiver`
 - `PATCH /api/caregiver`
-  - è¯·æ±‚ä½“ï¼šæ”¯æŒæ›´æ–° `preferences.notification`ã€`language`ã€`theme`ã€`followedTopics`
+  - ÇëÇóÌå£ºÖ§³Ö¸üĞÂ `preferences.notification`¡¢`language`¡¢`theme`¡¢`followedTopics`
 
-## 4. Drizzle æ•°æ®åº“å»ºæ¨¡
-æ¨èä½¿ç”¨ PostgreSQLï¼Œä»¥ä¸‹ä¸ºæ ¸å¿ƒè¡¨ç»“æ„ï¼ˆçœç•¥é€šç”¨å­—æ®µ `created_at`, `updated_at`ï¼‰ï¼š
+## 4. Drizzle Êı¾İ¿â½¨Ä£
+ÍÆ¼öÊ¹ÓÃ PostgreSQL£¬ÒÔÏÂÎªºËĞÄ±í½á¹¹£¨Ê¡ÂÔÍ¨ÓÃ×Ö¶Î `created_at`, `updated_at`£©£º
 
 ```ts
 // memories
@@ -197,13 +197,13 @@ caregiver_profiles (
 )
 ```
 
-> Drizzle å»ºè®®ï¼š
-> - åˆ›å»º `drizzle.config.ts`ï¼Œä½¿ç”¨ `@vercel/postgres`/`neon` è¿æ¥ã€‚
-> - æ‰€æœ‰å­—ç¬¦ä¸² ID ä½¿ç”¨ cuid/uuidï¼Œä¿è¯åˆ†å¸ƒå¼å”¯ä¸€æ€§ã€‚
-> - å¯¹å¸¸ç”¨æŸ¥è¯¢å­—æ®µï¼ˆ`event_date`, `start_at`, `published_at`ï¼‰å»ºç´¢å¼•ã€‚
+> Drizzle ½¨Òé£º
+> - ´´½¨ `drizzle.config.ts`£¬Ê¹ÓÃ `@vercel/postgres`/`neon` Á¬½Ó¡£
+> - ËùÓĞ×Ö·û´® ID Ê¹ÓÃ cuid/uuid£¬±£Ö¤·Ö²¼Ê½Î¨Ò»ĞÔ¡£
+> - ¶Ô³£ÓÃ²éÑ¯×Ö¶Î£¨`event_date`, `start_at`, `published_at`£©½¨Ë÷Òı¡£
 
-## 5. Next.js + shadcn/ui å®ç°å»ºè®®
-- **ç›®å½•ç»“æ„**
+## 5. Next.js + shadcn/ui ÊµÏÖ½¨Òé
+- **Ä¿Â¼½á¹¹**
   ```
   app/
     api/
@@ -221,52 +221,52 @@ caregiver_profiles (
   lib/
     db.ts         // drizzle client
     dto/          // zod schemas
-    repositories/ // æ•°æ®è®¿é—®å°è£…
-  components/ui/  // shadcn ç»„ä»¶
+    repositories/ // Êı¾İ·ÃÎÊ·â×°
+  components/ui/  // shadcn ×é¼ş
   app/(dashboard)/...
   ```
-- **è¯·æ±‚æ ¡éªŒ**ï¼šä½¿ç”¨ `zod` å®šä¹‰ DTOï¼Œä¸å‰ç«¯ç±»å‹å¯¹é½ï¼›è·¯ç”±å±‚åšè§£æ + é”™è¯¯å¤„ç†ã€‚
-- **é‰´æƒ**ï¼šé¢„ç•™ middlewareï¼ˆå¦‚ `middleware.ts`ï¼‰å¤„ç†èº«ä»½éªŒè¯ï¼›è‹¥çŸ­æœŸå†…æ— éœ€ç™»å½•ï¼Œå¯è¿”å›å›ºå®šç”¨æˆ· `patient-001`ã€‚
-- **shadcn/ui**ï¼šç”¨äºåç«¯è¿è¥ç•Œé¢ï¼ˆå¦‚å†…å®¹å®¡æ ¸ã€ä»»åŠ¡æ¨¡æ¿ç®¡ç†ï¼‰ï¼Œå»ºè®®åœ¨ `app/(dashboard)` ä¸‹æ„å»ºç›¸åº”é¡µé¢ã€‚
-- **ç¼“å­˜ç­–ç•¥**ï¼š
-  - åˆ—è¡¨æ¥å£æ”¯æŒ `GET` ç¼“å­˜ä¸ `revalidate`ã€‚
-  - å†™æ“ä½œå®Œæˆåå¯é€šè¿‡ `revalidatePath('/api/...')` æˆ–äº‹ä»¶æ€»çº¿åˆ·æ–°ã€‚
+- **ÇëÇóĞ£Ñé**£ºÊ¹ÓÃ `zod` ¶¨Òå DTO£¬ÓëÇ°¶ËÀàĞÍ¶ÔÆë£»Â·ÓÉ²ã×ö½âÎö + ´íÎó´¦Àí¡£
+- **¼øÈ¨**£ºÔ¤Áô middleware£¨Èç `middleware.ts`£©´¦ÀíÉí·İÑéÖ¤£»Èô¶ÌÆÚÄÚÎŞĞèµÇÂ¼£¬¿É·µ»Ø¹Ì¶¨ÓÃ»§ `patient-001`¡£
+- **shadcn/ui**£ºÓÃÓÚºó¶ËÔËÓª½çÃæ£¨ÈçÄÚÈİÉóºË¡¢ÈÎÎñÄ£°å¹ÜÀí£©£¬½¨ÒéÔÚ `app/(dashboard)` ÏÂ¹¹½¨ÏàÓ¦Ò³Ãæ¡£
+- **»º´æ²ßÂÔ**£º
+  - ÁĞ±í½Ó¿ÚÖ§³Ö `GET` »º´æÓë `revalidate`¡£
+  - Ğ´²Ù×÷Íê³Éºó¿ÉÍ¨¹ı `revalidatePath('/api/...')` »òÊÂ¼ş×ÜÏßË¢ĞÂ¡£
 
-## 6. å‰ç«¯é›†æˆç°çŠ¶ä¸å¥‘çº¦
-- `src/services/mockApi/patient.ts` å·²å®ç° `getPatientProfile / updatePatientProfile / listPatientAssessments / createPatientAssessment / updatePatientAssessment / deletePatientAssessment`ï¼Œå¹¶åœ¨ `src/stores/patient.ts` ä¸­è¢«æ¶ˆè´¹ã€‚
-- è¯„ä¼°æ–°å¢/æ›´æ–°ç°åœ¨ä¼šé€šè¿‡ Mock API è¿”å›çœŸå® IDï¼›å‰ç«¯åœ¨ `NutritionPage` ä¸­ä½¿ç”¨ `await` ä¿è¯é¡ºåºï¼Œå¹¶åœ¨å¤±è´¥æ—¶ç»™å‡ºæç¤ºã€‚
-- è®°å¿†ã€ä»»åŠ¡ã€èµ„è®¯ã€ç…§æŠ¤æ¡£æ¡ˆç­‰æ¨¡å—ä»é€šè¿‡å¯¹åº”çš„ `mockApi` æ‰§è¡Œ `list` æ“ä½œï¼Œåç«¯å®ç°æ—¶éœ€ä¿æŒå­—æ®µä¸€è‡´ã€‚
-- æ¥å£å“åº”éœ€æ»¡è¶³ä»¥ä¸‹é€šç”¨çº¦å®šï¼š
-  - æ—¶é—´ç»Ÿä¸€ä½¿ç”¨ `ISO 8601`ï¼ˆå¸¦æ—¶åŒºï¼‰ï¼Œæ—¥æœŸä½¿ç”¨ `YYYY-MM-DD`ã€‚
-  - åˆ—è¡¨è¿”å›æ•°ç»„ï¼Œå•é¡¹è¿”å›å¯¹è±¡ã€‚
-  - åˆ é™¤æˆåŠŸè¿”å› 204ï¼Œæ—  bodyï¼›è‹¥å¯¹è±¡ä¸å­˜åœ¨è¿”å› 404 å¹¶é™„å¸¦é”™è¯¯ä¿¡æ¯ã€‚
+## 6. Ç°¶Ë¼¯³ÉÏÖ×´ÓëÆõÔ¼
+- `app/services/mockApi/patient.ts` ÒÑÊµÏÖ `getPatientProfile / updatePatientProfile / listPatientAssessments / createPatientAssessment / updatePatientAssessment / deletePatientAssessment`£¬²¢ÔÚ `app/stores/patient.ts` ÖĞ±»Ïû·Ñ¡£
+- ÆÀ¹ÀĞÂÔö/¸üĞÂÏÖÔÚ»áÍ¨¹ı Mock API ·µ»ØÕæÊµ ID£»Ç°¶ËÔÚ `NutritionPage` ÖĞÊ¹ÓÃ `await` ±£Ö¤Ë³Ğò£¬²¢ÔÚÊ§°ÜÊ±¸ø³öÌáÊ¾¡£
+- ¼ÇÒä¡¢ÈÎÎñ¡¢×ÊÑ¶¡¢ÕÕ»¤µµ°¸µÈÄ£¿éÈÔÍ¨¹ı¶ÔÓ¦µÄ `mockApi` Ö´ĞĞ `list` ²Ù×÷£¬ºó¶ËÊµÏÖÊ±Ğè±£³Ö×Ö¶ÎÒ»ÖÂ¡£
+- ½Ó¿ÚÏìÓ¦ĞèÂú×ãÒÔÏÂÍ¨ÓÃÔ¼¶¨£º
+  - Ê±¼äÍ³Ò»Ê¹ÓÃ `ISO 8601`£¨´øÊ±Çø£©£¬ÈÕÆÚÊ¹ÓÃ `YYYY-MM-DD`¡£
+  - ÁĞ±í·µ»ØÊı×é£¬µ¥Ïî·µ»Ø¶ÔÏó¡£
+  - É¾³ı³É¹¦·µ»Ø 204£¬ÎŞ body£»Èô¶ÔÏó²»´æÔÚ·µ»Ø 404 ²¢¸½´ø´íÎóĞÅÏ¢¡£
 
-### å‰ç«¯å­—æ®µæ˜ å°„ä¸€è§ˆ
-| å‰ç«¯ store | Mock æ–¹æ³• | é¢„æœŸåç«¯æ¥å£ |
+### Ç°¶Ë×Ö¶ÎÓ³ÉäÒ»ÀÀ
+| Ç°¶Ë store | Mock ·½·¨ | Ô¤ÆÚºó¶Ë½Ó¿Ú |
 | --- | --- | --- |
 | `useMemoriesStore.fetchMemories` | `listMemories()` | `GET /api/memories`
-| `useMemoriesStore.addMemory` | ï¼ˆå¾…åç»­æ‰©å±•ï¼‰ | `POST /api/memories`
+| `useMemoriesStore.addMemory` | £¨´ıºóĞøÀ©Õ¹£© | `POST /api/memories`
 | `useTasksStore.fetchTasks` | `listTasks()` | `GET /api/tasks`
-| `useTasksStore.addTask` | ï¼ˆå¾…æ‰©å±•ï¼‰ | `POST /api/tasks`
+| `useTasksStore.addTask` | £¨´ıÀ©Õ¹£© | `POST /api/tasks`
 | `useNewsStore.fetchNews` | `listNews()` | `GET /api/news`
 | `useProfileStore.fetchProfile` | `getProfile()` | `GET /api/caregiver`
 | `usePatientStore.fetchProfile` | `getPatientProfile()` | `GET /api/patient/profile`
 | `usePatientStore.fetchAssessments` | `listPatientAssessments()` | `GET /api/patient/assessments`
 | `usePatientStore.addAssessment` | `createPatientAssessment()` | `POST /api/patient/assessments`
 
-## 7. æ¨è¿›è®¡åˆ’ä¸éªŒè¯
-1. **åç«¯å¼€å‘**
-   - åŸºäºæœ¬æ–‡æ¡£å»ºè¡¨å¹¶å®ç° APIï¼›æ‰€æœ‰è·¯ç”±é€šè¿‡ `zod` æ ¡éªŒã€‚
-   - ä¸ºå…³é”®æ¥å£ç¼–å†™å•å…ƒæµ‹è¯•ï¼ˆå¯ç”¨ Vitest / Jestï¼‰ä¸ Postman Collectionã€‚
-2. **è”è°ƒå‰ç½®**
-   - åœ¨ Next.js é¡¹ç›®ä¸­æä¾› `.env` ç¤ºä¾‹ï¼Œæš´éœ²æ•°æ®åº“è¿æ¥ã€JWT ç§˜é’¥ç­‰ã€‚
-   - ç”Ÿæˆ Swagger / OpenAPI æ–‡æ¡£ï¼ˆå¯é€‰ï¼Œä½¿ç”¨ `next-swagger-doc`ï¼‰ã€‚
-3. **è”è°ƒéªŒæ”¶**
-   - å‰ç«¯å°† `mockApi` æ›¿æ¢ä¸ºçœŸå® `fetch`/`axios` è°ƒç”¨ï¼Œåªéœ€å¯¹ `src/services` å±‚åšå°è£…æ›¿æ¢ã€‚
-   - é€šè¿‡å®é™…åœºæ™¯ï¼ˆæ–°å¢è¯„ä¼°ã€æ›´æ–°ä»»åŠ¡ã€åˆ é™¤å›å¿†ï¼‰è¿›è¡Œå›å½’ã€‚
-4. **è¿ç»´ä¸ç›‘æ§**
-   - ä½¿ç”¨ Vercel / Docker éƒ¨ç½²ï¼Œç»“åˆ `drizzle-kit` åšæ•°æ®åº“è¿ç§»ã€‚
-   - å¯¹å†™æ¥å£å¢åŠ æ—¥å¿—ä¸å®¡è®¡ï¼Œæ–¹ä¾¿åŒ»ç–—åˆè§„è¿½æº¯ã€‚
+## 7. ÍÆ½ø¼Æ»®ÓëÑéÖ¤
+1. **ºó¶Ë¿ª·¢**
+   - »ùÓÚ±¾ÎÄµµ½¨±í²¢ÊµÏÖ API£»ËùÓĞÂ·ÓÉÍ¨¹ı `zod` Ğ£Ñé¡£
+   - Îª¹Ø¼ü½Ó¿Ú±àĞ´µ¥Ôª²âÊÔ£¨¿ÉÓÃ Vitest / Jest£©Óë Postman Collection¡£
+2. **Áªµ÷Ç°ÖÃ**
+   - ÔÚ Next.js ÏîÄ¿ÖĞÌá¹© `.env` Ê¾Àı£¬±©Â¶Êı¾İ¿âÁ¬½Ó¡¢JWT ÃØÔ¿µÈ¡£
+   - Éú³É Swagger / OpenAPI ÎÄµµ£¨¿ÉÑ¡£¬Ê¹ÓÃ `next-swagger-doc`£©¡£
+3. **Áªµ÷ÑéÊÕ**
+   - Ç°¶Ë½« `mockApi` Ìæ»»ÎªÕæÊµ `fetch`/`axios` µ÷ÓÃ£¬Ö»Ğè¶Ô `app/services` ²ã×ö·â×°Ìæ»»¡£
+   - Í¨¹ıÊµ¼Ê³¡¾°£¨ĞÂÔöÆÀ¹À¡¢¸üĞÂÈÎÎñ¡¢É¾³ı»ØÒä£©½øĞĞ»Ø¹é¡£
+4. **ÔËÎ¬Óë¼à¿Ø**
+   - Ê¹ÓÃ Vercel / Docker ²¿Êğ£¬½áºÏ `drizzle-kit` ×öÊı¾İ¿âÇ¨ÒÆ¡£
+   - ¶ÔĞ´½Ó¿ÚÔö¼ÓÈÕÖ¾ÓëÉó¼Æ£¬·½±ãÒ½ÁÆºÏ¹æ×·Ëİ¡£
 
 ---
-å¦‚éœ€æ‰©å±•æ›´å¤šæ¨¡å—ï¼ˆå¦‚é¥®é£Ÿæ¨èã€AI æ‘˜è¦å†è®­ç»ƒï¼‰ï¼Œå¯åœ¨æœ¬æ–¹æ¡ˆåŸºç¡€ä¸Šè¿½åŠ  API ä¸æ•°æ®è¡¨å®šä¹‰ã€‚
+ÈçĞèÀ©Õ¹¸ü¶àÄ£¿é£¨ÈçÒûÊ³ÍÆ¼ö¡¢AI ÕªÒªÔÙÑµÁ·£©£¬¿ÉÔÚ±¾·½°¸»ù´¡ÉÏ×·¼Ó API ÓëÊı¾İ±í¶¨Òå¡£

@@ -1,0 +1,9 @@
+﻿{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.vue", "env.d.ts"],
+  "exclude": ["**/__tests__/**"]
+}
