@@ -12,7 +12,7 @@ export async function GET() {
     return jsonOk({ assessments, templates });
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "获取评估数据失败");
+    return jsonError(500, "unexpected_error", "获取评估记录失败");
   }
 }
 

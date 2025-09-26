@@ -12,7 +12,7 @@ export async function GET(_request: NextRequest, context: { params: { id: string
     return jsonOk(task);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "获取任务详情失败");
+    return jsonError(500, "unexpected_error", "获取任务失败");
   }
 }
 

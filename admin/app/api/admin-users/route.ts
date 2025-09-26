@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     return jsonOk(result);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "\u83B7\u53D6\u7BA1\u7406\u5458\u5217\u8868\u5931\u8D25");
+    return jsonError(500, "unexpected_error", "获取管理员列表失败");
   }
 }
 
@@ -29,6 +29,6 @@ export async function POST(request: NextRequest) {
     return jsonCreated(created);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "\u521B\u5EFA\u7BA1\u7406\u5458\u5931\u8D25");
+    return jsonError(500, "unexpected_error", "创建管理员失败");
   }
 }

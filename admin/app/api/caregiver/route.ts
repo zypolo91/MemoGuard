@@ -9,7 +9,7 @@ export async function GET() {
     return jsonOk(profile);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "获取照护者资料失败");
+    return jsonError(500, "unexpected_error", "获取照护者信息失败");
   }
 }
 
@@ -24,6 +24,6 @@ export async function PATCH(request: NextRequest) {
     return jsonOk(updated);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "更新照护者资料失败");
+    return jsonError(500, "unexpected_error", "更新照护者信息失败");
   }
 }

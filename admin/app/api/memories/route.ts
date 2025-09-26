@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     return jsonOk(data);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "无法获取回忆录列表");
+    return jsonError(500, "unexpected_error", "无法获取记忆列表");
   }
 }
 
@@ -30,6 +30,6 @@ export async function POST(request: NextRequest) {
     return jsonCreated(created);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "创建回忆录失败");
+    return jsonError(500, "unexpected_error", "创建记忆失败");
   }
 }

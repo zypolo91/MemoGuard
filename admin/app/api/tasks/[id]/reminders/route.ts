@@ -14,6 +14,6 @@ export async function POST(request: NextRequest, context: { params: { id: string
     return jsonCreated(updated);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "创建提醒失败");
+    return jsonError(500, "unexpected_error", "新增提醒失败");
   }
 }

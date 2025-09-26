@@ -5,71 +5,71 @@ export interface NavItem {
   label: string;
   href: string;
   description?: string;
-  group: "运营数据" | "健康资料" | "账户管理" | "工具";
+  group: "运营模块" | "照护档案" | "账号管理" | "工具";
 }
 
 export const NAV_ITEMS: NavItem[] = [
   {
     key: "dashboard",
-    label: "概览",
+    label: "数据总览",
     href: "/dashboard",
-    description: "整体运行情况",
-    group: "运营数据"
+    description: "掌握平台关键指标与趋势",
+    group: "运营模块"
   },
   {
     key: "memories",
-    label: "记忆管理",
+    label: "记忆库",
     href: "/memories",
-    description: "管理记忆内容与媒体",
-    group: "运营数据"
+    description: "管理记忆记录与多媒体素材",
+    group: "运营模块"
   },
   {
     key: "tasks",
-    label: "任务管理",
+    label: "任务提醒",
     href: "/tasks",
-    description: "护理任务与提醒",
-    group: "运营数据"
+    description: "安排任务并跟进执行情况",
+    group: "运营模块"
   },
   {
     key: "insights",
-    label: "资讯中心",
+    label: "资讯速递",
     href: "/insights",
-    description: "行业资讯与收藏",
-    group: "运营数据"
+    description: "汇总行业资讯与精选内容",
+    group: "运营模块"
   },
   {
     key: "patient",
-    label: "患者资料",
+    label: "患者档案",
     href: "/patient",
-    description: "档案与评估记录",
-    group: "健康资料"
+    description: "维护患者资料与评估记录",
+    group: "照护档案"
   },
   {
     key: "caregiver",
-    label: "照护者设置",
+    label: "照护者信息",
     href: "/caregiver",
-    description: "照护者档案与偏好",
-    group: "健康资料"
+    description: "管理家属及照护者数据",
+    group: "照护档案"
   },
   {
     key: "users",
     label: "用户管理",
     href: "/users",
-    description: "平台用户账号",
-    group: "账户管理"
+    description: "查看与维护平台用户账户",
+    group: "账号管理"
   },
   {
     key: "admins",
     label: "管理员",
     href: "/admins",
-    description: "后台管理员账号",
-    group: "账户管理"
+    description: "配置后台管理员账户与权限",
+    group: "账号管理"
   },
   {
     key: "uploads",
-    label: "上传工具",
+    label: "上传记录",
     href: "/uploads",
-    description: "API 上传调试",
+    description: "追踪 API 上传与文件存储",
     group: "工具"
   }
 ];

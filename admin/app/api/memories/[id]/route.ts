@@ -7,12 +7,12 @@ export async function GET(_request: NextRequest, context: { params: { id: string
   try {
     const record = await getMemory(context.params.id);
     if (!record) {
-      return jsonError(404, "not_found", "回忆录不存在");
+      return jsonError(404, "not_found", "记忆不存在");
     }
     return jsonOk(record);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "查询回忆录失败");
+    return jsonError(500, "unexpected_error", "查询记忆失败");
   }
 }
 
@@ -27,7 +27,7 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
     return jsonOk(updated);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "更新回忆录失败");
+    return jsonError(500, "unexpected_error", "更新记忆失败");
   }
 }
 
@@ -37,6 +37,6 @@ export async function DELETE(_request: NextRequest, context: { params: { id: str
     return jsonNoContent();
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "删除回忆录失败");
+    return jsonError(500, "unexpected_error", "删除记忆失败");
   }
 }

@@ -1,4 +1,5 @@
-﻿import { boolean, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+﻿import { relations } from "drizzle-orm";
+import { boolean, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const caregiverProfile = pgTable("caregiver_profile", {
   id: varchar("id", { length: 36 }).primaryKey(),
@@ -20,3 +21,13 @@ export const caregiverPreferences = pgTable("caregiver_preferences", {
   theme: varchar("theme", { length: 16 }).default("auto").notNull(),
   followedTopics: text("followed_topics").array().default([]).notNull()
 });
+export const caregiverProfileRelations = relations(caregiverProfile, ({ many }) => ({
+  preferences: many(caregiverPreferences)
+}));
+
+export const caregiverPreferencesRelations = relations(caregiverPreferences, ({ one }) => ({
+  caregiver: one(caregiverProfile, {
+    fields: [caregiverPreferences.caregiverId],
+    references: [caregiverProfile.id]
+  })
+}));

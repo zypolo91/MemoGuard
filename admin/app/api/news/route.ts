@@ -14,6 +14,6 @@ export async function GET(request: NextRequest) {
     return jsonOk(data);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "获取脑健康资讯失败");
+    return jsonError(500, "unexpected_error", "获取资讯列表失败");
   }
 }

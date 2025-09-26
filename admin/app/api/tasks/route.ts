@@ -9,7 +9,7 @@ export async function GET() {
     return jsonOk(tasks);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "获取护理任务失败");
+    return jsonError(500, "unexpected_error", "获取任务列表失败");
   }
 }
 
@@ -24,6 +24,6 @@ export async function POST(request: NextRequest) {
     return jsonCreated(created);
   } catch (error) {
     console.error(error);
-    return jsonError(500, "unexpected_error", "创建护理任务失败");
+    return jsonError(500, "unexpected_error", "创建任务失败");
   }
 }

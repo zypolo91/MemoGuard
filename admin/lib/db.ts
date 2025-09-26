@@ -1,12 +1,14 @@
-import { Pool } from "pg";
+﻿import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+
+import * as schema from "./schema";
 
 declare global {
   // eslint-disable-next-line no-var
   var __memoGuardPgPool: Pool | undefined;
   // eslint-disable-next-line no-var
-  var __memoGuardDb: NodePgDatabase | undefined;
+  var __memoGuardDb: NodePgDatabase<typeof schema> | undefined;
 }
 
 const connectionString = process.env.DATABASE_URL;
@@ -29,7 +31,7 @@ if (pool && !globalThis.__memoGuardPgPool) {
   globalThis.__memoGuardPgPool = pool;
 }
 
-const database = globalThis.__memoGuardDb ?? (pool ? drizzle(pool) : undefined);
+const database = globalThis.__memoGuardDb ?? (pool ? drizzle(pool, { schema }) : undefined);
 if (database && !globalThis.__memoGuardDb) {
   globalThis.__memoGuardDb = database;
 }
