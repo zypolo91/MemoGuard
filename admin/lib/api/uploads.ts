@@ -14,10 +14,22 @@ export interface UploadRecord {
   createdAt: string;
 }
 
+export interface UploadListResult {
+  data: UploadRecord[];
+  pagination: { page: number; pageSize: number; total: number };
+}
+
 interface ErrorResponse {
   error?: {
     message?: string;
   };
+}
+
+export async function listUploads(page = 1, pageSize = 10): Promise<UploadListResult> {
+  const query = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
+  const res = await fetch(`/api/uploads?${query.toString()}`);
+  if (!res.ok) throw new Error(`获取上传记录失败(${res.status})`);
+  return (await res.json()) as UploadListResult;
 }
 
 export async function createUpload(payload: UploadPayload): Promise<UploadRecord> {

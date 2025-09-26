@@ -75,3 +75,9 @@ export async function updateInsightArticle(id: string, input: Partial<CreateArti
     .where(eq(insightArticles.id, id));
   return db.query.insightArticles.findFirst({ where: (f, o) => o.eq(f.id, id) });
 }
+
+export async function deleteInsightArticle(id: string) {
+  const db = getDb();
+  await db.delete(insightArticles).where(eq(insightArticles.id, id));
+}
+

@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { assertSupabaseCredentials } from "@/lib/env";
 import { getSupabaseAdminClient } from "@/lib/supabase/server";
 import { jsonCreated, jsonError, jsonNoContent } from "@/lib/utils/http";
+import { createUploadRecord, deleteUploadRecordByPath, listUploadRecords } from "@/lib/repositories/uploads";
 import { createId } from "@/lib/utils/id";
 
 export const runtime = "nodejs";
@@ -89,8 +90,7 @@ export async function POST(request: NextRequest) {
 
     const { error: uploadError } = await client.storage.from(bucket).upload(filePath, file, {
       cacheControl: "3600",
-      contentType: file.type || "application/octet-stream",
-      duplex: "half"
+      contentType: file.type || "application/octet-stream"
     });
 
     if (uploadError) {
@@ -100,6 +100,16 @@ export async function POST(request: NextRequest) {
 
     const { data: publicUrlData } = client.storage.from(bucket).getPublicUrl(filePath);
     const url = publicUrlData.publicUrl;
+
+    await createUploadRecord({
+      id,
+      bucket,
+      path: filePath,
+      url,
+      mimeType: file.type || "application/octet-stream",
+      size: file.size,
+      originalName: file.name
+    });
 
     return jsonCreated({
       id,
@@ -139,6 +149,8 @@ export async function DELETE(request: NextRequest) {
       return jsonError(500, "delete_failed", "删除失败，请稍后再试");
     }
 
+    await deleteUploadRecordByPath(targetBucket, path);
+
     return jsonNoContent();
   } catch (error) {
     if (error instanceof Error && error.message.includes("Supabase 未配置")) {
@@ -146,5 +158,17 @@ export async function DELETE(request: NextRequest) {
     }
     console.error(error);
     return jsonError(500, "unexpected_error", "删除失败");
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const page = Number(request.nextUrl.searchParams.get("page") ?? "1");
+    const pageSize = Number(request.nextUrl.searchParams.get("pageSize") ?? "10");
+    const result = await listUploadRecords({ page, pageSize });
+    return Response.json(result, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return jsonError(500, "unexpected_error", "获取上传记录失败");
   }
 }

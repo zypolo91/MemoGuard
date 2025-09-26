@@ -1,12 +1,12 @@
 ﻿"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { createUpload, deleteUpload, type UploadRecord } from "@/lib/api/uploads";
+import { createUpload, deleteUpload, listUploads, type UploadRecord } from "@/lib/api/uploads";
 
 const uploadFormSchema = z.object({
   folder: z
@@ -19,7 +19,17 @@ const uploadFormSchema = z.object({
 type UploadFormValues = z.infer<typeof uploadFormSchema>;
 
 export default function UploadsPage() {
-  const [history, setHistory] = useState<UploadRecord[]>([]);
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+  const uploadsQuery = useQuery({
+    queryKey: ["uploads", page, pageSize],
+    queryFn: () => listUploads(page, pageSize),
+    keepPreviousData: true
+  });
+  const history: UploadRecord[] = uploadsQuery.data?.data ?? [];
+  const total = uploadsQuery.data?.pagination.total ?? 0;
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -86,8 +96,10 @@ export default function UploadsPage() {
 
   const uploadMutation = useMutation({
     mutationFn: ({ file, folder }: { file: File; folder?: string }) => createUpload({ file, folder }),
-    onSuccess: (record) => {
-      setHistory((prev) => [record, ...prev]);
+    onSuccess: () => {
+      // 刷新第一页方便看到最新
+      setPage(1);
+      uploadsQuery.refetch();
       clearFilePreview();
       form.reset();
     }
@@ -95,8 +107,8 @@ export default function UploadsPage() {
 
   const removeMutation = useMutation({
     mutationFn: async ({ path, bucket }: { path: string; bucket?: string }) => deleteUpload({ path, bucket }),
-    onSuccess: (_data, variables) => {
-      setHistory((prev) => prev.filter((x) => x.path !== variables.path));
+    onSuccess: () => {
+      uploadsQuery.refetch();
     }
   });
 
@@ -203,7 +215,9 @@ export default function UploadsPage() {
 
       <section className="rounded-lg border border-border bg-card p-6 shadow-sm">
         <h3 className="text-base font-semibold">上传记录</h3>
-        {history.length === 0 ? (
+        {uploadsQuery.isLoading ? (
+          <p className="text-sm text-muted-foreground">加载中...</p>
+        ) : history.length === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground">暂无记录。</p>
         ) : (
           <div className="mt-4 overflow-x-auto">
@@ -249,6 +263,25 @@ export default function UploadsPage() {
                 ))}
               </tbody>
             </table>
+            <div className="mt-4 flex items-center justify-end gap-2 text-sm">
+              <span>第 {page} / {pageCount} 页（共 {total} 条）</span>
+              <button
+                type="button"
+                disabled={page <= 1 || uploadsQuery.isFetching}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="rounded-md border border-border px-3 py-1 hover:bg-muted disabled:opacity-50"
+              >
+                上一页
+              </button>
+              <button
+                type="button"
+                disabled={page >= pageCount || uploadsQuery.isFetching}
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                className="rounded-md border border-border px-3 py-1 hover:bg-muted disabled:opacity-50"
+              >
+                下一页
+              </button>
+            </div>
           </div>
         )}
       </section>

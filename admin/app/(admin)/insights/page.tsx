@@ -4,7 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import { Modal } from "@/components/ui/modal";
-import { createArticle, listArticles, updateArticle, updateBookmark } from "@/lib/api/insights";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { createArticle, listArticles, updateArticle, updateBookmark, deleteArticle } from "@/lib/api/insights";
 import type { InsightArticleRecord } from "@/lib/api/insights";
 
 interface FilterState {
@@ -15,8 +16,7 @@ interface FilterState {
 function toRequestParams(filters: FilterState) {
   return {
     topic: filters.topic ? filters.topic.trim() : undefined,
-    bookmark:
-      filters.bookmark === "all" ? undefined : filters.bookmark === "bookmarked" ? true : false
+    bookmark: filters.bookmark === "all" ? undefined : filters.bookmark === "bookmarked" ? true : false
   };
 }
 
@@ -44,6 +44,7 @@ export default function InsightsPage() {
   const [filters, setFilters] = useState<FilterState>({ topic: "", bookmark: "all" });
   const [preview, setPreview] = useState<InsightArticleRecord | null>(null);
   const [editor, setEditor] = useState<EditorState | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const params = useMemo(() => toRequestParams(filters), [filters]);
 
@@ -53,8 +54,7 @@ export default function InsightsPage() {
   });
 
   const bookmarkMutation = useMutation({
-    mutationFn: ({ id, isBookmarked }: { id: string; isBookmarked: boolean }) =>
-      updateBookmark(id, { isBookmarked }),
+    mutationFn: ({ id, isBookmarked }: { id: string; isBookmarked: boolean }) => updateBookmark(id, { isBookmarked }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["insights"] })
   });
 
@@ -74,6 +74,14 @@ export default function InsightsPage() {
     }
   });
 
+  const removeMutation = useMutation({
+    mutationFn: async (id: string) => deleteArticle(id),
+    onSuccess: () => {
+      setDeleteId(null);
+      queryClient.invalidateQueries({ queryKey: ["insights"] });
+    }
+  });
+
   const articles = articlesQuery.data ?? [];
 
   return (
@@ -82,7 +90,7 @@ export default function InsightsPage() {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
             <h2 className="text-lg font-semibold">资讯速递</h2>
-            <p className="text-sm text-muted-foreground">可筛选、收藏，并支持新增/编辑。</p>
+            <p className="text-sm text-muted-foreground">可筛选、收藏，并支持新增/编辑/删除。</p>
           </div>
           <button
             type="button"
@@ -184,6 +192,13 @@ export default function InsightsPage() {
                     >
                       编辑
                     </button>
+                    <button
+                      type="button"
+                      className="rounded-md border border-destructive px-3 py-1 text-xs text-destructive hover:bg-destructive/10"
+                      onClick={() => setDeleteId(article.id)}
+                    >
+                      删除
+                    </button>
                   </div>
                 </div>
               </article>
@@ -218,11 +233,7 @@ export default function InsightsPage() {
       </Modal>
 
       {/* 新增/编辑弹窗 */}
-      <Modal
-        open={!!editor}
-        onClose={() => setEditor(null)}
-        title={editor?.mode === "create" ? "新增文章" : "编辑文章"}
-      >
+      <Modal open={!!editor} onClose={() => setEditor(null)} title={editor?.mode === "create" ? "新增文章" : "编辑文章"}>
         {editor && (
           <form
             className="space-y-3"
@@ -247,12 +258,7 @@ export default function InsightsPage() {
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-muted-foreground">标题</label>
-                <input
-                  name="title"
-                  required
-                  defaultValue={editor.data?.title || ""}
-                  className="rounded-md border border-border px-3 py-2 text-sm"
-                />
+                <input name="title" required defaultValue={editor.data?.title || ""} className="rounded-md border border-border px-3 py-2 text-sm" />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-muted-foreground">来源</label>
@@ -260,12 +266,7 @@ export default function InsightsPage() {
               </div>
               <div className="flex flex-col gap-1 md:col-span-2">
                 <label className="text-xs text-muted-foreground">原文链接</label>
-                <input
-                  name="contentUrl"
-                  defaultValue={editor.data?.contentUrl || ""}
-                  className="rounded-md border border-border px-3 py-2 text-sm"
-                  placeholder="https://..."
-                />
+                <input name="contentUrl" defaultValue={editor.data?.contentUrl || ""} className="rounded-md border border-border px-3 py-2 text-sm" placeholder="https://..." />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-muted-foreground">主题</label>
@@ -273,12 +274,7 @@ export default function InsightsPage() {
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-muted-foreground">发布时间</label>
-                <input
-                  name="publishedAt"
-                  type="datetime-local"
-                  defaultValue={editor.data?.publishedAt ? new Date(editor.data.publishedAt).toISOString().slice(0, 16) : ""}
-                  className="rounded-md border border-border px-3 py-2 text-sm"
-                />
+                <input name="publishedAt" type="datetime-local" defaultValue={editor.data?.publishedAt ? new Date(editor.data.publishedAt).toISOString().slice(0, 16) : ""} className="rounded-md border border-border px-3 py-2 text-sm" />
               </div>
               <div className="flex flex-col gap-1 md:col-span-2">
                 <label className="text-xs text-muted-foreground">摘要</label>
@@ -289,17 +285,23 @@ export default function InsightsPage() {
               <button type="button" onClick={() => setEditor(null)} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted">
                 取消
               </button>
-              <button
-                type="submit"
-                disabled={createMutation.isPending || updateMutation.isPending}
-                className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90 disabled:opacity-70"
-              >
+              <button type="submit" disabled={createMutation.isPending || updateMutation.isPending} className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90 disabled:opacity-70">
                 {editor.mode === "create" ? (createMutation.isPending ? "保存中..." : "保存") : updateMutation.isPending ? "保存中..." : "保存"}
               </button>
             </div>
           </form>
         )}
       </Modal>
+
+      <ConfirmDialog
+        open={!!deleteId}
+        title="删除文章"
+        description={`确定要删除该文章吗？该操作无法撤销。`}
+        confirmLabel={removeMutation.isPending ? "删除中..." : "确认删除"}
+        cancelLabel="取消"
+        onCancel={() => setDeleteId(null)}
+        onConfirm={() => deleteId && removeMutation.mutate(deleteId)}
+      />
     </div>
   );
 }

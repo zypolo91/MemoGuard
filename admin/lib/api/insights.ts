@@ -51,3 +51,8 @@ export async function updateBookmark(id: string, payload: BookmarkPayload) {
     json: payload
   });
 }
+
+export async function deleteArticle(id: string) {
+  const res = await fetch(`/api/news/${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("删除失败");
+}

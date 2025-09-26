@@ -1,6 +1,6 @@
 ﻿import { NextRequest } from "next/server";
 import { articleUpdateSchema } from "@/lib/dto/insights";
-import { updateInsightArticle } from "@/lib/repositories/insights";
+import { updateInsightArticle, deleteInsightArticle } from "@/lib/repositories/insights";
 import { jsonError, jsonOk } from "@/lib/utils/http";
 
 export async function PATCH(request: NextRequest, context: { params: { id: string } }) {
@@ -26,5 +26,16 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
   } catch (error) {
     console.error(error);
     return jsonError(500, "unexpected_error", "更新资讯失败");
+  }
+}
+
+export async function DELETE(_request: NextRequest, context: { params: { id: string } }) {
+  try {
+    const id = context.params.id;
+    await deleteInsightArticle(id);
+    return new Response(null, { status: 204 });
+  } catch (error) {
+    console.error(error);
+    return jsonError(500, "unexpected_error", "删除资讯失败");
   }
 }
