@@ -2,6 +2,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
+import { env } from "./env";
 import * as schema from "./schema";
 
 declare global {
@@ -11,7 +12,7 @@ declare global {
   var __memoGuardDb: NodePgDatabase<typeof schema> | undefined;
 }
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = env.DATABASE_URL;
 
 if (!connectionString) {
   console.warn("DATABASE_URL is not set. Database connections will fail until it is configured.");
