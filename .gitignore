@@ -8,3 +8,5 @@ coverage
 .idea
 .tmp
 .history
+.next
+.gz
