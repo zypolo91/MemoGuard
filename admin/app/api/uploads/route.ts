@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 
 import { assertSupabaseCredentials } from "@/lib/env";
 import { getSupabaseAdminClient } from "@/lib/supabase/server";
-import { jsonCreated, jsonError } from "@/lib/utils/http";
+import { jsonCreated, jsonError, jsonNoContent } from "@/lib/utils/http";
 import { createId } from "@/lib/utils/id";
 
 export const runtime = "nodejs";
@@ -118,5 +118,33 @@ export async function POST(request: NextRequest) {
 
     console.error(error);
     return jsonError(500, "unexpected_error", "上传失败");
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { bucket } = assertSupabaseCredentials();
+    const client = getSupabaseAdminClient();
+    const body = await request.json().catch(() => ({} as any));
+    const path = (body?.path as string | undefined)?.trim();
+    const targetBucket = (body?.bucket as string | undefined)?.trim() || bucket;
+
+    if (!path) {
+      return jsonError(400, "invalid_request", "缺少路径 path");
+    }
+
+    const { error } = await client.storage.from(targetBucket).remove([path]);
+    if (error) {
+      console.error("Supabase remove error", error);
+      return jsonError(500, "delete_failed", "删除失败，请稍后再试");
+    }
+
+    return jsonNoContent();
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("Supabase 未配置")) {
+      return jsonError(503, "supabase_not_configured", "Supabase 存储尚未配置，请联系管理员");
+    }
+    console.error(error);
+    return jsonError(500, "unexpected_error", "删除失败");
   }
 }

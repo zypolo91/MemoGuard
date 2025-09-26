@@ -1,5 +1,5 @@
 ﻿import { apiFetch } from "./client";
-import type { BookmarkPayload } from "@/lib/dto/insights";
+import type { BookmarkPayload, ArticleCreatePayload, ArticleUpdatePayload } from "@/lib/dto/insights";
 
 export interface InsightArticleRecord {
   id: string;
@@ -29,6 +29,20 @@ export async function listArticles(params: NewsQueryParams = {}) {
   const search = toSearchParams(params);
   const query = search.toString();
   return apiFetch<InsightArticleRecord[]>(`/api/news${query ? `?${query}` : ""}`);
+}
+
+export async function createArticle(payload: ArticleCreatePayload) {
+  return apiFetch<InsightArticleRecord>(`/api/news`, {
+    method: "POST",
+    json: payload
+  });
+}
+
+export async function updateArticle(id: string, payload: ArticleUpdatePayload) {
+  return apiFetch<InsightArticleRecord>(`/api/news/${id}`, {
+    method: "PATCH",
+    json: payload
+  });
 }
 
 export async function updateBookmark(id: string, payload: BookmarkPayload) {

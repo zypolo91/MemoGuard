@@ -49,3 +49,20 @@ export async function createUpload(payload: UploadPayload): Promise<UploadRecord
 
   return (await response.json()) as UploadRecord;
 }
+
+export async function deleteUpload(input: { path: string; bucket?: string }): Promise<void> {
+  const response = await fetch("/api/uploads", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input)
+  });
+
+  if (!response.ok) {
+    let message = "删除失败";
+    try {
+      const body = (await response.json()) as ErrorResponse;
+      if (body?.error?.message) message = body.error.message;
+    } catch {}
+    throw new Error(message);
+  }
+}

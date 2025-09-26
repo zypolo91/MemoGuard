@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import { Modal } from "@/components/ui/modal";
-import { listArticles, updateBookmark } from "@/lib/api/insights";
+import { createArticle, listArticles, updateArticle, updateBookmark } from "@/lib/api/insights";
 import type { InsightArticleRecord } from "@/lib/api/insights";
 
 interface FilterState {
@@ -16,11 +16,7 @@ function toRequestParams(filters: FilterState) {
   return {
     topic: filters.topic ? filters.topic.trim() : undefined,
     bookmark:
-      filters.bookmark === "all"
-        ? undefined
-        : filters.bookmark === "bookmarked"
-          ? true
-          : false
+      filters.bookmark === "all" ? undefined : filters.bookmark === "bookmarked" ? true : false
   };
 }
 
@@ -28,7 +24,7 @@ function formatDate(value?: string | null) {
   if (!value) return "-";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString("zh-CN", { hour12: false });
+  return date.toLocaleDateString("zh-CN");
 }
 
 function formatDateTime(value?: string | null) {
@@ -38,10 +34,16 @@ function formatDateTime(value?: string | null) {
   return date.toLocaleString("zh-CN", { hour12: false });
 }
 
+interface EditorState {
+  mode: "create" | "edit";
+  data: Partial<InsightArticleRecord> | null;
+}
+
 export default function InsightsPage() {
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState<FilterState>({ topic: "", bookmark: "all" });
-  const [selected, setSelected] = useState<InsightArticleRecord | null>(null);
+  const [preview, setPreview] = useState<InsightArticleRecord | null>(null);
+  const [editor, setEditor] = useState<EditorState | null>(null);
 
   const params = useMemo(() => toRequestParams(filters), [filters]);
 
@@ -56,16 +58,39 @@ export default function InsightsPage() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["insights"] })
   });
 
+  const createMutation = useMutation({
+    mutationFn: createArticle,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["insights"] });
+      setEditor(null);
+    }
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: any }) => updateArticle(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["insights"] });
+      setEditor(null);
+    }
+  });
+
   const articles = articlesQuery.data ?? [];
 
   return (
     <div className="flex flex-1 flex-col gap-6">
       <section className="rounded-lg border border-border bg-card p-6 shadow-sm">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-lg font-semibold">资讯速递</h2>
-          <p className="text-sm text-muted-foreground">
-            汇总行业新闻与精选内容，可按主题筛选并快速标记收藏，供后续推送与策划参考。
-          </p>
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-lg font-semibold">资讯速递</h2>
+            <p className="text-sm text-muted-foreground">可筛选、收藏，并支持新增/编辑。</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setEditor({ mode: "create", data: {} })}
+            className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+          >
+            新增文章
+          </button>
         </div>
       </section>
 
@@ -82,28 +107,25 @@ export default function InsightsPage() {
           }}
         >
           <div className="flex flex-col gap-1 md:col-span-4">
-            <label className="text-sm text-muted-foreground">主题关键词</label>
+            <label className="text-sm text-muted-foreground">主题</label>
             <input
               type="text"
               name="topic"
               defaultValue={filters.topic}
-              placeholder="例如：记忆训练、照护政策"
+              placeholder="如：记忆训练、康复建议"
               className="rounded-md border border-border px-3 py-2 text-sm"
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-muted-foreground">收藏状态</label>
+            <label className="text-sm text-muted-foreground">收藏</label>
             <select name="bookmark" defaultValue={filters.bookmark} className="rounded-md border border-border px-3 py-2 text-sm">
               <option value="all">全部</option>
-              <option value="bookmarked">仅收藏</option>
+              <option value="bookmarked">已收藏</option>
               <option value="unbookmarked">未收藏</option>
             </select>
           </div>
           <div className="flex items-end justify-end">
-            <button
-              type="submit"
-              className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
-            >
+            <button type="submit" className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90">
               应用筛选
             </button>
           </div>
@@ -111,14 +133,10 @@ export default function InsightsPage() {
       </section>
 
       <section className="rounded-lg border border-border bg-card p-6 shadow-sm">
-        {articlesQuery.isLoading && <p className="text-sm text-muted-foreground">正在加载资讯...</p>}
-        {articlesQuery.isError && (
-          <p className="text-sm text-destructive">加载失败：{(articlesQuery.error as Error).message}</p>
-        )}
+        {articlesQuery.isLoading && <p className="text-sm text-muted-foreground">加载中...</p>}
+        {articlesQuery.isError && <p className="text-sm text-destructive">{(articlesQuery.error as Error).message}</p>}
         {!articlesQuery.isLoading && articles.length === 0 && (
-          <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-            暂无符合条件的资讯，可调整筛选条件。
-          </div>
+          <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">暂无数据</div>
         )}
         {articles.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -138,35 +156,33 @@ export default function InsightsPage() {
                       {article.isBookmarked ? "已收藏" : "收藏"}
                     </button>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {article.source ?? "未知来源"} · {formatDate(article.publishedAt)}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{article.source ?? "未知来源"} · {formatDate(article.publishedAt)}</p>
                   {article.summary && <p className="text-sm text-muted-foreground line-clamp-4">{article.summary}</p>}
                   {article.topic && (
-                    <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
-                      #{article.topic}
-                    </span>
+                    <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">#{article.topic}</span>
                   )}
                 </div>
                 <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
                   <span>创建于 {formatDateTime(article.createdAt)}</span>
                   <div className="flex gap-2">
                     {article.contentUrl && (
-                      <a
-                        href={article.contentUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted"
-                      >
-                        打开原文
+                      <a href={article.contentUrl} target="_blank" rel="noreferrer" className="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted">
+                        查看原文
                       </a>
                     )}
                     <button
                       type="button"
                       className="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted"
-                      onClick={() => setSelected(article)}
+                      onClick={() => setPreview(article)}
                     >
-                      查看详情
+                      预览
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted"
+                      onClick={() => setEditor({ mode: "edit", data: article })}
+                    >
+                      编辑
                     </button>
                   </div>
                 </div>
@@ -176,41 +192,114 @@ export default function InsightsPage() {
         )}
       </section>
 
-      <Modal open={!!selected} onClose={() => setSelected(null)} title={selected?.title ?? "资讯详情"}>
-        {selected && (
+      {/* 预览弹窗 */}
+      <Modal open={!!preview} onClose={() => setPreview(null)} title={preview?.title ?? "文章"}>
+        {preview && (
           <div className="space-y-3 text-sm">
             <div className="flex flex-col gap-1 text-muted-foreground">
-              <span>来源：{selected.source ?? "未知"}</span>
-              <span>发布日期：{formatDate(selected.publishedAt)}</span>
-              <span>主题：{selected.topic ?? "未分类"}</span>
-              <span>收藏状态：{selected.isBookmarked ? "已收藏" : "未收藏"}</span>
+              <span>来源：{preview.source ?? "未知"}</span>
+              <span>发布时间：{formatDate(preview.publishedAt)}</span>
+              <span>主题：{preview.topic ?? "未填写"}</span>
+              <span>收藏：{preview.isBookmarked ? "已收藏" : "未收藏"}</span>
             </div>
-            {selected.summary && (
+            {preview.summary && (
               <div>
                 <h4 className="text-sm font-medium text-foreground">摘要</h4>
-                <p className="mt-1 whitespace-pre-wrap text-muted-foreground">{selected.summary}</p>
+                <p className="mt-1 whitespace-pre-wrap text-muted-foreground">{preview.summary}</p>
               </div>
             )}
-            {selected.contentUrl && (
-              <a
-                href={selected.contentUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center text-sm text-primary underline"
-              >
-                前往原文
+            {preview.contentUrl && (
+              <a href={preview.contentUrl} target="_blank" rel="noreferrer" className="inline-flex items-center text-sm text-primary underline">
+                打开原文
               </a>
             )}
           </div>
         )}
       </Modal>
+
+      {/* 新增/编辑弹窗 */}
+      <Modal
+        open={!!editor}
+        onClose={() => setEditor(null)}
+        title={editor?.mode === "create" ? "新增文章" : "编辑文章"}
+      >
+        {editor && (
+          <form
+            className="space-y-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const fd = new FormData(e.currentTarget);
+              const payload = {
+                title: String(fd.get("title") || "").trim(),
+                source: String(fd.get("source") || "").trim(),
+                contentUrl: String(fd.get("contentUrl") || "").trim(),
+                topic: String(fd.get("topic") || "").trim(),
+                summary: String(fd.get("summary") || "").trim(),
+                publishedAt: String(fd.get("publishedAt") || "").trim()
+              };
+              if (editor.mode === "create") {
+                createMutation.mutate(payload as any);
+              } else if (editor.data?.id) {
+                updateMutation.mutate({ id: editor.data.id, payload });
+              }
+            }}
+          >
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-muted-foreground">标题</label>
+                <input
+                  name="title"
+                  required
+                  defaultValue={editor.data?.title || ""}
+                  className="rounded-md border border-border px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-muted-foreground">来源</label>
+                <input name="source" defaultValue={editor.data?.source || ""} className="rounded-md border border-border px-3 py-2 text-sm" />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <label className="text-xs text-muted-foreground">原文链接</label>
+                <input
+                  name="contentUrl"
+                  defaultValue={editor.data?.contentUrl || ""}
+                  className="rounded-md border border-border px-3 py-2 text-sm"
+                  placeholder="https://..."
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-muted-foreground">主题</label>
+                <input name="topic" defaultValue={editor.data?.topic || ""} className="rounded-md border border-border px-3 py-2 text-sm" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-muted-foreground">发布时间</label>
+                <input
+                  name="publishedAt"
+                  type="datetime-local"
+                  defaultValue={editor.data?.publishedAt ? new Date(editor.data.publishedAt).toISOString().slice(0, 16) : ""}
+                  className="rounded-md border border-border px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <label className="text-xs text-muted-foreground">摘要</label>
+                <textarea name="summary" rows={4} defaultValue={editor.data?.summary || ""} className="rounded-md border border-border px-3 py-2 text-sm" />
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button type="button" onClick={() => setEditor(null)} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted">
+                取消
+              </button>
+              <button
+                type="submit"
+                disabled={createMutation.isPending || updateMutation.isPending}
+                className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90 disabled:opacity-70"
+              >
+                {editor.mode === "create" ? (createMutation.isPending ? "保存中..." : "保存") : updateMutation.isPending ? "保存中..." : "保存"}
+              </button>
+            </div>
+          </form>
+        )}
+      </Modal>
     </div>
   );
 }
-
-
-
-
-
-
-

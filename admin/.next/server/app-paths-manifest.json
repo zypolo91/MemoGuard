@@ -1,7 +1,13 @@
 {
   "/api/news/route": "app/api/news/route.js",
-  "/api/caregiver/route": "app/api/caregiver/route.js",
-  "/(admin)/uploads/page": "app/(admin)/uploads/page.js",
-  "/(admin)/caregiver/page": "app/(admin)/caregiver/page.js",
-  "/(admin)/insights/page": "app/(admin)/insights/page.js"
+  "/api/tasks/route": "app/api/tasks/route.js",
+  "/api/memories/route": "app/api/memories/route.js",
+  "/api/users/route": "app/api/users/route.js",
+  "/api/admin-users/route": "app/api/admin-users/route.js",
+  "/(admin)/insights/page": "app/(admin)/insights/page.js",
+  "/(admin)/memories/page": "app/(admin)/memories/page.js",
+  "/(admin)/users/page": "app/(admin)/users/page.js",
+  "/(admin)/tasks/page": "app/(admin)/tasks/page.js",
+  "/(admin)/admins/page": "app/(admin)/admins/page.js",
+  "/(admin)/uploads/page": "app/(admin)/uploads/page.js"
 }
