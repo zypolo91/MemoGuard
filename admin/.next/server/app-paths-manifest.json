@@ -1,5 +1,12 @@
 {
-  "/api/patient/assessments/route": "app/api/patient/assessments/route.js",
-  "/api/patient/profile/route": "app/api/patient/profile/route.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/(admin)/dashboard/page": "app/(admin)/dashboard/page.js",
+  "/(admin)/tasks/page": "app/(admin)/tasks/page.js",
+  "/(admin)/insights/page": "app/(admin)/insights/page.js",
+  "/(admin)/memories/page": "app/(admin)/memories/page.js",
+  "/(admin)/caregiver/page": "app/(admin)/caregiver/page.js",
+  "/(admin)/patient/page": "app/(admin)/patient/page.js",
+  "/(admin)/users/page": "app/(admin)/users/page.js",
+  "/(admin)/admins/page": "app/(admin)/admins/page.js",
+  "/(admin)/uploads/page": "app/(admin)/uploads/page.js"
 }
