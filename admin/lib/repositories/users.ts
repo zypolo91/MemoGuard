@@ -1,9 +1,10 @@
-import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
+﻿import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { users } from "../schema/users";
 import { getDb } from "../utils/db";
 import { createId } from "../utils/id";
 import type { UserCreatePayload, UserQuery, UserUpdatePayload } from "../dto/users";
+import { hashPassword } from "../utils/password";
 
 function buildUserFilters(query: UserQuery): SQL | undefined {
   const filters: SQL[] = [];
@@ -70,6 +71,7 @@ export async function createUser(payload: UserCreatePayload) {
     avatarUrl: payload.avatarUrl,
     role: payload.role ?? "patient",
     status: payload.status ?? "invited",
+    passwordHash: hashPassword(payload.password),
     metadata: payload.metadata ?? {}
   });
   return getUser(id);
@@ -86,22 +88,25 @@ export async function getUser(id: string) {
 export async function updateUser(id: string, payload: UserUpdatePayload) {
   const db = getDb();
 
-  if (Object.keys(payload).length === 0) {
+  const update: any = {
+    ...(payload.email !== undefined && { email: payload.email }),
+    ...(payload.phone !== undefined && { phone: payload.phone }),
+    ...(payload.fullName !== undefined && { fullName: payload.fullName }),
+    ...(payload.avatarUrl !== undefined && { avatarUrl: payload.avatarUrl }),
+    ...(payload.role !== undefined && { role: payload.role }),
+    ...(payload.status !== undefined && { status: payload.status }),
+    ...(payload.metadata !== undefined && { metadata: payload.metadata })
+  };
+
+  if (payload.password !== undefined) {
+    update.passwordHash = hashPassword(payload.password);
+  }
+
+  if (Object.keys(update).length === 0) {
     return getUser(id);
   }
 
-  await db
-    .update(users)
-    .set({
-      ...(payload.email !== undefined && { email: payload.email }),
-      ...(payload.phone !== undefined && { phone: payload.phone }),
-      ...(payload.fullName !== undefined && { fullName: payload.fullName }),
-      ...(payload.avatarUrl !== undefined && { avatarUrl: payload.avatarUrl }),
-      ...(payload.role !== undefined && { role: payload.role }),
-      ...(payload.status !== undefined && { status: payload.status }),
-      ...(payload.metadata !== undefined && { metadata: payload.metadata })
-    })
-    .where(eq(users.id, id));
+  await db.update(users).set(update).where(eq(users.id, id));
 
   return getUser(id);
 }

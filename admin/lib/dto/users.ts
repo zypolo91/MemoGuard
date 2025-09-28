@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 export const userRoleSchema = z.enum(["patient", "caregiver", "family", "guest"]);
 export const userStatusSchema = z.enum(["invited", "active", "inactive", "suspended"]);
@@ -19,22 +19,20 @@ export const userCreateSchema = z.object({
   avatarUrl: z.string().url().optional(),
   role: userRoleSchema.optional().default("patient"),
   status: userStatusSchema.optional().default("invited"),
+  password: z.string().min(6, "密码至少 6 位").max(128, "密码过长"),
   metadata: metadataSchema.optional().default({})
 });
 
-export const userUpdateSchema = userCreateSchema.partial();
+export const userUpdateSchema = userCreateSchema.partial().extend({
+  password: z.string().min(6).max(128).optional()
+});
 
 export const userQuerySchema = z.object({
   role: userRoleSchema.optional(),
   status: userStatusSchema.optional(),
   search: z.string().trim().max(120).optional(),
   page: z.coerce.number().int().min(1).optional(),
-  pageSize: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .max(100)
-    .optional()
+  pageSize: z.coerce.number().int().min(1).max(100).optional()
 });
 
 export type UserCreatePayload = z.infer<typeof userCreateSchema>;

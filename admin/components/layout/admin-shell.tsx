@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 
 import { NAV_ITEMS, type NavItem } from "@/config/navigation";
-import { getRoleLabel, canViewModule, type AdminRole } from "@/lib/security/permissions";
-import { QueryProvider } from "@/components/providers/query-provider";
+import { canViewModule } from "@/lib/security/permissions";
 import { RoleProvider, useActiveRole } from "@/components/providers/role-provider";
 
 function Sidebar() {
@@ -56,29 +55,8 @@ function Sidebar() {
   );
 }
 
-function RoleBadge() {
-  const { role, setRole } = useActiveRole();
-
-  return (
-    <div className="flex items-center gap-3">
-      <span className="text-sm text-muted-foreground">当前角色：</span>
-      <select
-        className="rounded-md border border-border bg-background px-2 py-1 text-sm"
-        value={role}
-        onChange={(event) => setRole(event.target.value as AdminRole)}
-      >
-        <option value="superadmin">超级管理员</option>
-        <option value="manager">运营管理员</option>
-        <option value="editor">内容编辑</option>
-        <option value="viewer">只读访客</option>
-      </select>
-    </div>
-  );
-}
-
 function Header() {
   const pathname = usePathname();
-  const { role } = useActiveRole();
 
   const activeItem = useMemo(() => {
     if (!pathname) return undefined;
@@ -94,26 +72,24 @@ function Header() {
         )}
       </div>
       <div className="flex items-center gap-4">
-        <span className="hidden text-sm text-muted-foreground sm:inline">已连接 Supabase</span>
-        <span className="hidden text-sm text-muted-foreground sm:inline">{getRoleLabel(role)}</span>
-        <RoleBadge />
+        <form action="/api/auth/logout" method="post">
+          <button type="submit" className="rounded-md border border-border px-3 py-1 text-sm hover:bg-muted">退出</button>
+        </form>
       </div>
     </header>
   );
 }
 
-export function AdminShell({ children }: { children: ReactNode }) {
+export function AdminShell({ children, initialRole = "superadmin" }: { children: ReactNode; initialRole?: string }) {
   return (
-    <RoleProvider>
-      <QueryProvider>
-        <div className="flex min-h-screen bg-background text-foreground">
-          <Sidebar />
-          <div className="flex flex-1 flex-col">
-            <Header />
-            <main className="flex-1 overflow-y-auto bg-muted/40 px-6 py-6">{children}</main>
-          </div>
+    <RoleProvider defaultRole={initialRole as any}>
+      <div className="flex min-h-screen bg-background text-foreground">
+        <Sidebar />
+        <div className="flex flex-1 flex-col">
+          <Header />
+          <main className="flex-1 overflow-y-auto bg-muted/40 px-6 py-6">{children}</main>
         </div>
-      </QueryProvider>
+      </div>
     </RoleProvider>
   );
 }

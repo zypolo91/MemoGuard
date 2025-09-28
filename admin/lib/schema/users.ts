@@ -1,4 +1,4 @@
-import { jsonb, pgEnum, pgTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/pg-core";
+﻿import { jsonb, pgEnum, pgTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("user_role", ["patient", "caregiver", "family", "guest"]);
 export const userStatusEnum = pgEnum("user_status", ["invited", "active", "inactive", "suspended"]);
@@ -13,6 +13,7 @@ export const users = pgTable(
     avatarUrl: text("avatar_url"),
     role: userRoleEnum("role").default("patient").notNull(),
     status: userStatusEnum("status").default("invited").notNull(),
+    passwordHash: text("password_hash").notNull(),
     metadata: jsonb("metadata").$type<Record<string, unknown>>().default({}).notNull(),
     lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -46,3 +47,4 @@ export const adminUsers = pgTable(
     emailIndex: uniqueIndex("admin_users_email_idx").on(table.email)
   })
 );
+

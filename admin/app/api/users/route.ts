@@ -1,7 +1,9 @@
-﻿import { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { userCreateSchema, userQuerySchema } from "@/lib/dto/users";
 import { createUser, listUsers } from "@/lib/repositories/users";
 import { jsonCreated, jsonError, jsonOk } from "@/lib/utils/http";
+
+export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   try {
@@ -32,3 +34,4 @@ export async function POST(request: NextRequest) {
     return jsonError(500, "unexpected_error", "创建用户失败");
   }
 }
+

@@ -1,7 +1,9 @@
-﻿import { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { userUpdateSchema } from "@/lib/dto/users";
 import { deleteUser, getUser, updateUser } from "@/lib/repositories/users";
 import { jsonError, jsonNoContent, jsonOk } from "@/lib/utils/http";
+
+export const runtime = "nodejs";
 
 export async function GET(_request: NextRequest, context: { params: { id: string } }) {
   try {
@@ -43,3 +45,4 @@ export async function DELETE(_request: NextRequest, context: { params: { id: str
     return jsonError(500, "unexpected_error", "删除用户失败");
   }
 }
+
