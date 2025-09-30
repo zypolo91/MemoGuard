@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { assertSupabaseCredentials } from "@/lib/env";
 import { getSupabaseAdminClient } from "@/lib/supabase/server";
 import { jsonCreated, jsonError, jsonNoContent } from "@/lib/utils/http";
+import { getActiveAdmin } from "@/lib/auth/session";
 import { createUploadRecord, deleteUploadRecordByPath, listUploadRecords } from "@/lib/repositories/uploads";
 import { createId } from "@/lib/utils/id";
 
@@ -101,6 +102,8 @@ export async function POST(request: NextRequest) {
     const { data: publicUrlData } = client.storage.from(bucket).getPublicUrl(filePath);
     const url = publicUrlData.publicUrl;
 
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
     await createUploadRecord({
       id,
       bucket,
@@ -108,7 +111,8 @@ export async function POST(request: NextRequest) {
       url,
       mimeType: file.type || "application/octet-stream",
       size: file.size,
-      originalName: file.name
+      originalName: file.name,
+      ownerAdminId: me.id
     });
 
     return jsonCreated({
@@ -149,7 +153,9 @@ export async function DELETE(request: NextRequest) {
       return jsonError(500, "delete_failed", "删除失败，请稍后再试");
     }
 
-    await deleteUploadRecordByPath(targetBucket, path);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    await deleteUploadRecordByPath(me.id, targetBucket, path);
 
     return jsonNoContent();
   } catch (error) {
@@ -165,7 +171,9 @@ export async function GET(request: NextRequest) {
   try {
     const page = Number(request.nextUrl.searchParams.get("page") ?? "1");
     const pageSize = Number(request.nextUrl.searchParams.get("pageSize") ?? "10");
-    const result = await listUploadRecords({ page, pageSize });
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    const result = await listUploadRecords(me.id, { page, pageSize });
     return Response.json(result, { status: 200 });
   } catch (error) {
     console.error(error);

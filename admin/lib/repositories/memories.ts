@@ -1,4 +1,4 @@
-﻿import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { memories, memoryMedia } from "../schema/memories";
 import { getDb } from "../utils/db";
 import { createId } from "../utils/id";
@@ -12,7 +12,7 @@ function isWithinRange(date: string, { from, to }: { from?: string; to?: string 
   return true;
 }
 
-export async function listMemories(params: { tag?: string; from?: string; to?: string }) {
+export async function listMemories(ownerAdminId: string, params: { tag?: string; from?: string; to?: string }) {
   const db = getDb();
   const base = await db.query.memories.findMany({
     with: {
@@ -20,6 +20,7 @@ export async function listMemories(params: { tag?: string; from?: string; to?: s
       annotations: true,
       insights: true
     },
+    where: (fields, operators) => operators.eq(fields.ownerAdminId, ownerAdminId),
     orderBy: (fields, { desc }) => desc(fields.eventDate)
   });
 
@@ -30,7 +31,7 @@ export async function listMemories(params: { tag?: string; from?: string; to?: s
   });
 }
 
-export async function getMemory(id: string) {
+export async function getMemory(ownerAdminId: string, id: string) {
   const db = getDb();
   const record = await db.query.memories.findFirst({
     with: {
@@ -38,12 +39,12 @@ export async function getMemory(id: string) {
       annotations: true,
       insights: true
     },
-    where: (fields, operators) => operators.eq(fields.id, id)
+    where: (fields, operators) => and(operators.eq(fields.id, id), operators.eq(fields.ownerAdminId, ownerAdminId))
   });
   return record ?? null;
 }
 
-export async function createMemory(payload: MemoryPayload) {
+export async function createMemory(ownerAdminId: string, payload: MemoryPayload) {
   const db = getDb();
   const memoryId = createId();
 
@@ -56,7 +57,8 @@ export async function createMemory(payload: MemoryPayload) {
     mood: payload.mood,
     location: payload.location,
     tags: payload.tags,
-    people: payload.people
+    people: payload.people,
+    ownerAdminId
   });
 
   if (payload.media.length) {
@@ -72,10 +74,10 @@ export async function createMemory(payload: MemoryPayload) {
     );
   }
 
-  return getMemory(memoryId);
+  return getMemory(ownerAdminId, memoryId);
 }
 
-export async function updateMemory(id: string, payload: MemoryUpdatePayload) {
+export async function updateMemory(ownerAdminId: string, id: string, payload: MemoryUpdatePayload) {
   const db = getDb();
 
   if (Object.keys(payload).length) {
@@ -91,7 +93,7 @@ export async function updateMemory(id: string, payload: MemoryUpdatePayload) {
         ...(payload.tags !== undefined && { tags: payload.tags }),
         ...(payload.people !== undefined && { people: payload.people })
       })
-      .where(eq(memories.id, id));
+      .where(and(eq(memories.id, id), eq(memories.ownerAdminId, ownerAdminId)));
   }
 
   if (payload.media) {
@@ -110,10 +112,10 @@ export async function updateMemory(id: string, payload: MemoryUpdatePayload) {
     }
   }
 
-  return getMemory(id);
+  return getMemory(ownerAdminId, id);
 }
 
-export async function deleteMemory(id: string) {
+export async function deleteMemory(ownerAdminId: string, id: string) {
   const db = getDb();
-  await db.delete(memories).where(eq(memories.id, id));
+  await db.delete(memories).where(and(eq(memories.id, id), eq(memories.ownerAdminId, ownerAdminId)));
 }

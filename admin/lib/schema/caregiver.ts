@@ -1,5 +1,6 @@
 ﻿import { relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { adminUsers } from "./users";
 
 export const caregiverProfile = pgTable("caregiver_profile", {
   id: varchar("id", { length: 36 }).primaryKey(),
@@ -7,6 +8,7 @@ export const caregiverProfile = pgTable("caregiver_profile", {
   avatarUrl: text("avatar_url"),
   streak: varchar("streak", { length: 32 }),
   bio: text("bio"),
+  ownerAdminId: varchar("owner_admin_id", { length: 36 }).references(() => adminUsers.id),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull()
 });

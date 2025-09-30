@@ -1,5 +1,6 @@
 ﻿import { date, jsonb, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { adminUsers } from "./users";
 
 export const memories = pgTable("memories", {
   id: varchar("id", { length: 36 }).primaryKey(),
@@ -12,6 +13,7 @@ export const memories = pgTable("memories", {
   location: varchar("location", { length: 120 }),
   tags: text("tags").array().default([]).notNull(),
   people: text("people").array().default([]).notNull(),
+  ownerAdminId: varchar("owner_admin_id", { length: 36 }).references(() => adminUsers.id),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull()
 });

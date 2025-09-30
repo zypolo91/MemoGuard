@@ -1,4 +1,4 @@
-﻿import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { caregiverProfile, caregiverPreferences } from "../schema/caregiver";
 import { getDb } from "../utils/db";
 import { createId } from "../utils/id";
@@ -6,10 +6,10 @@ import type { CaregiverUpdatePayload } from "../dto/caregiver";
 
 const CAREGIVER_ID = "caregiver-001";
 
-export async function getCaregiverProfile() {
+export async function getCaregiverProfile(ownerAdminId: string) {
   const db = getDb();
   const profile = await db.query.caregiverProfile.findFirst({
-    where: (fields, operators) => operators.eq(fields.id, CAREGIVER_ID),
+    where: (fields, operators) => operators.eq(fields.ownerAdminId, ownerAdminId),
     with: {
       preferences: true
     }
@@ -17,19 +17,21 @@ export async function getCaregiverProfile() {
   return profile ?? null;
 }
 
-export async function ensureCaregiverProfile() {
+export async function ensureCaregiverProfile(ownerAdminId: string) {
   const db = getDb();
-  const existing = await getCaregiverProfile();
+  const existing = await getCaregiverProfile(ownerAdminId);
   if (existing) return existing;
   await db.insert(caregiverProfile).values({
-    id: CAREGIVER_ID,
+    id: createId(),
     fullName: "Demo Caregiver",
     streak: "0",
-    bio: ""
+    bio: "",
+    ownerAdminId
   });
+  const created = await getCaregiverProfile(ownerAdminId);
   await db.insert(caregiverPreferences).values({
     id: createId(),
-    caregiverId: CAREGIVER_ID,
+    caregiverId: created!.id,
     notificationDailyDigest: true,
     notificationNews: true,
     notificationTasks: true,
@@ -37,12 +39,12 @@ export async function ensureCaregiverProfile() {
     theme: "auto",
     followedTopics: []
   });
-  return getCaregiverProfile();
+  return getCaregiverProfile(ownerAdminId);
 }
 
-export async function updateCaregiverProfile(updates: CaregiverUpdatePayload) {
+export async function updateCaregiverProfile(ownerAdminId: string, updates: CaregiverUpdatePayload) {
   const db = getDb();
-  await ensureCaregiverProfile();
+  const profile = (await ensureCaregiverProfile(ownerAdminId))!;
 
   if (updates.fullName !== undefined || updates.avatarUrl !== undefined || updates.bio !== undefined || updates.streak !== undefined) {
     await db
@@ -53,7 +55,7 @@ export async function updateCaregiverProfile(updates: CaregiverUpdatePayload) {
         ...(updates.bio !== undefined && { bio: updates.bio }),
         ...(updates.streak !== undefined && { streak: updates.streak })
       })
-      .where(eq(caregiverProfile.id, CAREGIVER_ID));
+      .where(eq(caregiverProfile.id, profile.id));
   }
 
   if (updates.preferences) {
@@ -75,8 +77,8 @@ export async function updateCaregiverProfile(updates: CaregiverUpdatePayload) {
           followedTopics: updates.preferences.followedTopics
         })
       })
-      .where(eq(caregiverPreferences.caregiverId, CAREGIVER_ID));
+      .where(eq(caregiverPreferences.caregiverId, profile.id));
   }
 
-  return getCaregiverProfile();
+  return getCaregiverProfile(ownerAdminId);
 }

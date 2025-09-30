@@ -1,5 +1,6 @@
 ﻿import { boolean, integer, interval, jsonb, pgEnum, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { adminUsers } from "./users";
 
 export const taskPriorityEnum = pgEnum("task_priority", ["low", "medium", "high"]);
 export const taskStatusEnum = pgEnum("task_status", ["pending", "in_progress", "completed", "skipped"]);
@@ -11,6 +12,7 @@ export const careTasks = pgTable("care_tasks", {
   priority: taskPriorityEnum("priority").notNull().default("medium"),
   frequency: varchar("frequency", { length: 32 }),
   dueAt: timestamp("due_at", { withTimezone: true }),
+  ownerAdminId: varchar("owner_admin_id", { length: 36 }).references(() => adminUsers.id),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   streak: integer("streak").default(0).notNull()

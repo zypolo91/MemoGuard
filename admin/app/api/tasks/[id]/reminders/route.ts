@@ -2,6 +2,7 @@
 import { reminderPayloadSchema } from "@/lib/dto/tasks";
 import { addReminder } from "@/lib/repositories/tasks";
 import { jsonCreated, jsonError } from "@/lib/utils/http";
+import { getActiveAdmin } from "@/lib/auth/session";
 
 export async function POST(request: NextRequest, context: { params: { id: string } }) {
   try {
@@ -10,10 +11,13 @@ export async function POST(request: NextRequest, context: { params: { id: string
     if (!payload.success) {
       return jsonError(422, "validation_error", payload.error.errors.map((issue) => issue.message).join("; "));
     }
-    const updated = await addReminder(context.params.id, payload.data);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    const updated = await addReminder(me.id, context.params.id, payload.data);
     return jsonCreated(updated);
   } catch (error) {
     console.error(error);
     return jsonError(500, "unexpected_error", "新增提醒失败");
   }
 }
+

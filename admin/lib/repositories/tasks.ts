@@ -1,21 +1,22 @@
-﻿import { and, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { careTasks, taskReminders, taskHistory } from "../schema/tasks";
 import { getDb } from "../utils/db";
 import { createId } from "../utils/id";
 import type { ReminderPayload, TaskPayload, TaskUpdatePayload } from "../dto/tasks";
 
-export async function listTasks() {
+export async function listTasks(ownerAdminId: string) {
   const db = getDb();
   return db.query.careTasks.findMany({
     with: {
       reminders: true,
       history: true
     },
+    where: (fields, operators) => operators.eq(fields.ownerAdminId, ownerAdminId),
     orderBy: (fields, { desc }) => desc(fields.createdAt)
   });
 }
 
-export async function createTask(payload: TaskPayload) {
+export async function createTask(ownerAdminId: string, payload: TaskPayload) {
   const db = getDb();
   const id = createId();
   await db.insert(careTasks).values({
@@ -24,12 +25,13 @@ export async function createTask(payload: TaskPayload) {
     description: payload.description,
     priority: payload.priority,
     frequency: payload.frequency,
-    dueAt: payload.dueAt ?? null
+    dueAt: payload.dueAt ?? null,
+    ownerAdminId
   });
-  return getTask(id);
+  return getTask(ownerAdminId, id);
 }
 
-export async function updateTask(id: string, payload: TaskUpdatePayload) {
+export async function updateTask(ownerAdminId: string, id: string, payload: TaskUpdatePayload) {
   const db = getDb();
   await db
     .update(careTasks)
@@ -40,28 +42,28 @@ export async function updateTask(id: string, payload: TaskUpdatePayload) {
       ...(payload.frequency !== undefined && { frequency: payload.frequency }),
       ...(payload.dueAt !== undefined && { dueAt: payload.dueAt })
     })
-    .where(eq(careTasks.id, id));
-  return getTask(id);
+    .where(and(eq(careTasks.id, id), eq(careTasks.ownerAdminId, ownerAdminId)));
+  return getTask(ownerAdminId, id);
 }
 
-export async function deleteTask(id: string) {
+export async function deleteTask(ownerAdminId: string, id: string) {
   const db = getDb();
-  await db.delete(careTasks).where(eq(careTasks.id, id));
+  await db.delete(careTasks).where(and(eq(careTasks.id, id), eq(careTasks.ownerAdminId, ownerAdminId)));
 }
 
-export async function getTask(id: string) {
+export async function getTask(ownerAdminId: string, id: string) {
   const db = getDb();
   const task = await db.query.careTasks.findFirst({
     with: {
       reminders: true,
       history: true
     },
-    where: (fields, operators) => operators.eq(fields.id, id)
+    where: (fields, operators) => and(operators.eq(fields.id, id), operators.eq(fields.ownerAdminId, ownerAdminId))
   });
   return task ?? null;
 }
 
-export async function addReminder(taskId: string, payload: ReminderPayload) {
+export async function addReminder(ownerAdminId: string, taskId: string, payload: ReminderPayload) {
   const db = getDb();
   await db.insert(taskReminders).values({
     id: createId(),
@@ -70,10 +72,10 @@ export async function addReminder(taskId: string, payload: ReminderPayload) {
     timestamp: payload.timestamp,
     notes: payload.notes
   });
-  return getTask(taskId);
+  return getTask(ownerAdminId, taskId);
 }
 
-export async function updateReminder(taskId: string, timestamp: string, payload: Partial<ReminderPayload>) {
+export async function updateReminder(ownerAdminId: string, taskId: string, timestamp: string, payload: Partial<ReminderPayload>) {
   const db = getDb();
   await db
     .update(taskReminders)
@@ -83,11 +85,11 @@ export async function updateReminder(taskId: string, timestamp: string, payload:
       ...(payload.notes !== undefined && { notes: payload.notes })
     })
     .where(and(eq(taskReminders.taskId, taskId), eq(taskReminders.timestamp, timestamp)));
-  return getTask(taskId);
+  return getTask(ownerAdminId, taskId);
 }
 
-export async function deleteReminder(taskId: string, timestamp: string) {
+export async function deleteReminder(ownerAdminId: string, taskId: string, timestamp: string) {
   const db = getDb();
   await db.delete(taskReminders).where(and(eq(taskReminders.taskId, taskId), eq(taskReminders.timestamp, timestamp)));
-  return getTask(taskId);
+  return getTask(ownerAdminId, taskId);
 }

@@ -2,10 +2,13 @@
 import { taskUpdateSchema } from "@/lib/dto/tasks";
 import { deleteTask, getTask, updateTask } from "@/lib/repositories/tasks";
 import { jsonError, jsonNoContent, jsonOk } from "@/lib/utils/http";
+import { getActiveAdmin } from "@/lib/auth/session";
 
 export async function GET(_request: NextRequest, context: { params: { id: string } }) {
   try {
-    const task = await getTask(context.params.id);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    const task = await getTask(me.id, context.params.id);
     if (!task) {
       return jsonError(404, "not_found", "任务不存在");
     }
@@ -23,7 +26,9 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
     if (!payload.success) {
       return jsonError(422, "validation_error", payload.error.errors.map((issue) => issue.message).join("; "));
     }
-    const updated = await updateTask(context.params.id, payload.data);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    const updated = await updateTask(me.id, context.params.id, payload.data);
     return jsonOk(updated);
   } catch (error) {
     console.error(error);
@@ -33,10 +38,13 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
 
 export async function DELETE(_request: NextRequest, context: { params: { id: string } }) {
   try {
-    await deleteTask(context.params.id);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    await deleteTask(me.id, context.params.id);
     return jsonNoContent();
   } catch (error) {
     console.error(error);
     return jsonError(500, "unexpected_error", "删除任务失败");
   }
-}
+}
+

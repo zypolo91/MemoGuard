@@ -2,6 +2,7 @@
 import { reminderPayloadSchema } from "@/lib/dto/tasks";
 import { deleteReminder, updateReminder } from "@/lib/repositories/tasks";
 import { jsonError, jsonNoContent, jsonOk } from "@/lib/utils/http";
+import { getActiveAdmin } from "@/lib/auth/session";
 
 const reminderPatchSchema = reminderPayloadSchema.partial();
 
@@ -12,7 +13,9 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
     if (!payload.success) {
       return jsonError(422, "validation_error", payload.error.errors.map((issue) => issue.message).join("; "));
     }
-    const updated = await updateReminder(context.params.id, decodeURIComponent(context.params.timestamp), payload.data);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    const updated = await updateReminder(me.id, context.params.id, decodeURIComponent(context.params.timestamp), payload.data);
     return jsonOk(updated);
   } catch (error) {
     console.error(error);
@@ -22,10 +25,13 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
 
 export async function DELETE(_request: NextRequest, context: { params: { id: string; timestamp: string } }) {
   try {
-    await deleteReminder(context.params.id, decodeURIComponent(context.params.timestamp));
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    await deleteReminder(me.id, context.params.id, decodeURIComponent(context.params.timestamp));
     return jsonNoContent();
   } catch (error) {
     console.error(error);
     return jsonError(500, "unexpected_error", "删除提醒失败");
   }
 }
+

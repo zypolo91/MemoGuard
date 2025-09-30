@@ -1,4 +1,5 @@
 ﻿import { bigint, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { adminUsers } from "./users";
 
 export const uploadRecords = pgTable("upload_records", {
   id: varchar("id", { length: 36 }).primaryKey(),
@@ -8,5 +9,6 @@ export const uploadRecords = pgTable("upload_records", {
   mimeType: varchar("mime_type", { length: 128 }).notNull(),
   size: bigint("size", { mode: "number" }).notNull(),
   originalName: varchar("original_name", { length: 255 }).notNull(),
+  ownerAdminId: varchar("owner_admin_id", { length: 36 }).references(() => adminUsers.id),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull()
 });

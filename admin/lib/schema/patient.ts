@@ -1,5 +1,6 @@
 ﻿import { boolean, integer, jsonb, numeric, pgEnum, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { adminUsers } from "./users";
 
 export const assessmentMetricEnum = pgEnum("assessment_metric", ["tau", "amyloid", "metabolism", "cognition", "score"]);
 export const assessmentStatusEnum = pgEnum("assessment_status", ["stable", "improving", "declining", "critical"]);
@@ -22,6 +23,7 @@ export const patientProfile = pgTable("patient_profile", {
   birthDate: timestamp("birth_date", { withTimezone: false }),
   diagnosis: varchar("diagnosis", { length: 160 }),
   notes: text("notes"),
+  ownerAdminId: varchar("owner_admin_id", { length: 36 }).references(() => adminUsers.id),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull()
 });

@@ -10,6 +10,7 @@ export interface UploadRecordInput {
   mimeType: string;
   size: number;
   originalName: string;
+  ownerAdminId: string;
 }
 
 export async function createUploadRecord(input: UploadRecordInput) {
@@ -21,16 +22,17 @@ export async function createUploadRecord(input: UploadRecordInput) {
     url: input.url,
     mimeType: input.mimeType,
     size: input.size,
-    originalName: input.originalName
+    originalName: input.originalName,
+    ownerAdminId: input.ownerAdminId
   });
 }
 
-export async function deleteUploadRecordByPath(bucket: string, path: string) {
+export async function deleteUploadRecordByPath(ownerAdminId: string, bucket: string, path: string) {
   const db = getDb();
-  await db.delete(uploadRecords).where(sql`(${uploadRecords.bucket}) = ${bucket} AND (${uploadRecords.path}) = ${path}`);
+  await db.delete(uploadRecords).where(sql`(${uploadRecords.bucket}) = ${bucket} AND (${uploadRecords.path}) = ${path} AND (${uploadRecords.ownerAdminId}) = ${ownerAdminId}`);
 }
 
-export async function listUploadRecords(query: { page?: number; pageSize?: number }) {
+export async function listUploadRecords(ownerAdminId: string, query: { page?: number; pageSize?: number }) {
   const db = getDb();
   const pageSize = Math.max(1, Math.min(100, query.pageSize ?? 10));
   const page = Math.max(1, query.page ?? 1);
@@ -40,10 +42,11 @@ export async function listUploadRecords(query: { page?: number; pageSize?: numbe
     db
       .select()
       .from(uploadRecords)
+      .where(sql`(${uploadRecords.ownerAdminId}) = ${ownerAdminId}`)
       .orderBy(desc(uploadRecords.createdAt))
       .limit(pageSize)
       .offset(offset),
-    db.select({ count: sql<number>`count(*)` }).from(uploadRecords)
+    db.select({ count: sql<number>`count(*)` }).from(uploadRecords).where(sql`(${uploadRecords.ownerAdminId}) = ${ownerAdminId}`)
   ]);
 
   const total = Number(totalRow[0]?.count ?? 0);

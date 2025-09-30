@@ -2,10 +2,13 @@
 import { memoryUpdateSchema } from "@/lib/dto/memories";
 import { deleteMemory, getMemory, updateMemory } from "@/lib/repositories/memories";
 import { jsonError, jsonNoContent, jsonOk } from "@/lib/utils/http";
+import { getActiveAdmin } from "@/lib/auth/session";
 
 export async function GET(_request: NextRequest, context: { params: { id: string } }) {
   try {
-    const record = await getMemory(context.params.id);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    const record = await getMemory(me.id, context.params.id);
     if (!record) {
       return jsonError(404, "not_found", "记忆不存在");
     }
@@ -23,7 +26,9 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
     if (!payload.success) {
       return jsonError(422, "validation_error", payload.error.errors.map((issue) => issue.message).join("; "));
     }
-    const updated = await updateMemory(context.params.id, payload.data);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    const updated = await updateMemory(me.id, context.params.id, payload.data);
     return jsonOk(updated);
   } catch (error) {
     console.error(error);
@@ -33,10 +38,13 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
 
 export async function DELETE(_request: NextRequest, context: { params: { id: string } }) {
   try {
-    await deleteMemory(context.params.id);
+    const me = await getActiveAdmin();
+    if (!me) return jsonError(401, "unauthorized", "请先登录");
+    await deleteMemory(me.id, context.params.id);
     return jsonNoContent();
   } catch (error) {
     console.error(error);
     return jsonError(500, "unexpected_error", "删除记忆失败");
   }
 }
+
